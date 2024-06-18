@@ -1,0 +1,7 @@
+{
+  "name": "testClient",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
