@@ -1,11 +1,58 @@
 <script setup lang="ts">
-import {IonRouterOutlet} from "@ionic/vue";
+import {computed} from 'vue';
+import {useRouter} from 'vue-router';
+import {useAuthStore} from '@/stores/authStore';
+import {
+  IonButton,
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonIcon,
+  IonTabs,
+  IonTabBar,
+  IonTabButton,
+  IonRouterOutlet,
+  IonLabel
+} from '@ionic/vue';
+import PingPong from "@/components/PingPong.vue";
+import {business, clipboard, keypad} from "ionicons/icons";
+
+const router = useRouter();
+const authStore = useAuthStore();
+
+const isAuthenticated = computed(() => authStore.isAuthenticated);
+const user = computed(() => authStore.user);
+
+const goToLogin = () => {
+  router.push('/login');
+};
+
+const logout = () => {
+  authStore.logout()
+}
+
 </script>
 
 <template>
-  <IonRouterOutlet/>
+  <IonPage>
+    <IonTabs>
+      <IonRouterOutlet/>
+      <IonTabBar>
+        <IonTabButton tab="intercoms" href="/intercoms">
+          <IonIcon :icon="keypad"/>
+          <IonLabel>Domophones</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="addresses" href="/addresses">
+          <IonIcon :icon="business"/>
+          <IonLabel>Addresses</IonLabel>
+        </IonTabButton>
+      </IonTabBar>
+    </IonTabs>
+  </IonPage>
 </template>
 
 <style scoped>
-
+/* Добавьте ваш CSS здесь */
 </style>
