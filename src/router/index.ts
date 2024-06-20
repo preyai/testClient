@@ -5,6 +5,7 @@ import LoginPage from "@/views/LoginPage.vue";
 import AddressesPage from "@/views/AddressesPage.vue";
 import {useAuthStore} from "@/stores/authStore";
 import DomophonesPage from "@/views/DomophonesPage.vue";
+import CamerasPage from "@/views/CamerasPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -23,6 +24,10 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path: 'intercoms',
                 component: DomophonesPage
+            },
+            {
+                path: 'cameras',
+                component: CamerasPage
             }
         ]
     },

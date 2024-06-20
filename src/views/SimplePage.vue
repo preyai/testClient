@@ -17,7 +17,7 @@ import {
   IonLabel
 } from '@ionic/vue';
 import PingPong from "@/components/PingPong.vue";
-import {business, clipboard, keypad} from "ionicons/icons";
+import {business, camera, clipboard, keypad, videocam} from "ionicons/icons";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -47,6 +47,10 @@ const logout = () => {
         <IonTabButton tab="addresses" href="/addresses">
           <IonIcon :icon="business"/>
           <IonLabel>Addresses</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="cameras" href="/cameras">
+          <IonIcon :icon="videocam"/>
+          <IonLabel>Cameras</IonLabel>
         </IonTabButton>
       </IonTabBar>
     </IonTabs>

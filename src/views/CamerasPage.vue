@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import ItemsList from "@/components/ItemsList.vue";
-import {getDomophones} from "@/api/domophones";
+import {getCameras} from "@/api/cameras";
 import EditableItem from "@/components/EditableItem.vue";
 
-const fetchDomophones = () => getDomophones();
+const fetchCameras = () => getCameras();
 
 const saveItem = async (updatedItem: Record<string, string>) => {
 };
@@ -11,9 +11,9 @@ const saveItem = async (updatedItem: Record<string, string>) => {
 
 <template>
   <ItemsList
-      title="Domophones"
-      :fetchItems="fetchDomophones"
-      filterKey="name"
+      title="Cameras"
+      :fetchItems="fetchCameras"
+      filter-key="name"
   >
     <template #default="{ item }">
       <EditableItem :item="item" :saveItem="saveItem" titleKey="name"/>

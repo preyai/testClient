@@ -1,6 +1,7 @@
 import api from "@/api";
+import {apiItem} from "@/types/data";
 
-export interface House {
+export interface House extends apiItem {
     houseId: number,
     settlementId: number | null,
     streetId: number,
@@ -10,8 +11,6 @@ export interface House {
     houseFull: string,
     house: string,
     companyId: number | null,
-
-    [key: string]: any
 }
 
 const listUrl = 'addresses/addresses'

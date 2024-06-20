@@ -1,11 +1,12 @@
 import api from "@/api/index";
+import {apiItem} from "@/types/data";
 
 interface DomophoneStatus {
     status: string;
     message: string;
 }
 
-export interface Domophone {
+export interface Domophone extends apiItem {
     domophoneId: number;
     enabled: number;
     model: string;
@@ -21,7 +22,6 @@ export interface Domophone {
     ip: string | null;
     sub_id: string | null;
     status: DomophoneStatus;
-    [key: string]: any;
 }
 
 const url = 'houses/domophones';
