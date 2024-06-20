@@ -12,7 +12,7 @@ import {
   IonTitle,
   IonToolbar
 } from "@ionic/vue";
-import {computed, Ref, ref} from "vue";
+import {computed, ref} from "vue";
 import {apiItem} from "@/types/data";
 import {ItemProps} from "@/types/items";
 
@@ -20,8 +20,9 @@ interface props extends ItemProps {
   item: T
 }
 
-
 const {item, saveItem, titleKey, disabledKeys} = defineProps<props>();
+
+const emit = defineEmits(['onSave'])
 
 const color = computed(() => {
   if (item.status && item.status.status === 'OK')
@@ -44,6 +45,7 @@ const handlerInput = (key: string, value: string) => {
 
 const save = async () => {
   await saveItem(updated.value);
+  emit('onSave');
   isOpen.value = false;
 };
 </script>

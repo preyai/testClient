@@ -2,6 +2,7 @@
 import ItemsList from "@/components/ItemsList.vue";
 import {getHouses, updateHouse} from "@/api/houses";
 import EditableItem from "@/components/EditableItem.vue";
+import {IonPage} from "@ionic/vue";
 
 const fetchHouses = () => getHouses();
 
@@ -12,15 +13,17 @@ const saveItem = async (updatedItem: Record<string, string>) => {
 </script>
 
 <template>
-  <ItemsList
-      title="Addresses"
-      :fetchItems="fetchHouses"
-      filter-key="houseFull"
-  >
-    <template #default="{ item }">
-      <EditableItem :item="item" :saveItem="saveItem" titleKey="houseFull"/>
-    </template>
-  </ItemsList>
+  <IonPage>
+    <ItemsList
+        title="Addresses"
+        :fetchItems="fetchHouses"
+        filter-key="houseFull"
+    >
+      <template #default="{ item, onSave }">
+        <EditableItem :item="item" :saveItem="saveItem" titleKey="houseFull" @onSave="onSave"/>
+      </template>
+    </ItemsList>
+  </IonPage>
 </template>
 
 <style scoped>

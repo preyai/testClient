@@ -3,7 +3,7 @@ import {IonContent, IonHeader, IonList, IonPage, IonSearchbar, IonTitle, IonTool
 import {computed, onMounted, Ref, ref} from "vue";
 import {apiItem} from "@/types/data";
 
-const props = defineProps<{
+const {title, fetchItems, filterKey} = defineProps<{
   title: string,
   fetchItems: () => Promise<T[]>,
   filterKey: string,
@@ -14,33 +14,35 @@ const query = ref("");
 const filteredItems = computed(() => {
   if (!query.value)
     return items.value;
-  return items.value.filter(item => item[props.filterKey].toLowerCase().includes(query.value.toLowerCase()));
+  return items.value.filter(item => item[filterKey].toLowerCase().includes(query.value.toLowerCase()));
 });
 
-onMounted(() => {
-  props.fetchItems().then(result => items.value = result);
-});
+const load = () => {
+  fetchItems().then(result => items.value = result);
+}
+
+onMounted(load);
+
 </script>
 
 <template>
-  <IonPage>
-    <IonHeader>
-      <IonToolbar>
-        <IonTitle>{{ title }}</IonTitle>
-      </IonToolbar>
-      <IonToolbar>
-        <IonSearchbar v-model="query"/>
-      </IonToolbar>
-    </IonHeader>
-    <IonContent>
-      <IonList>
-        <slot
-            v-for="item in filteredItems" :key="item.id"
-            :item="item"
-        />
-      </IonList>
-    </IonContent>
-  </IonPage>
+  <IonHeader>
+    <IonToolbar>
+      <IonTitle>{{ title }}</IonTitle>
+    </IonToolbar>
+    <IonToolbar>
+      <IonSearchbar v-model="query"/>
+    </IonToolbar>
+  </IonHeader>
+  <IonContent>
+    <IonList>
+      <slot
+          v-for="item in filteredItems" :key="item.id"
+          :item="item"
+          :onSave="load"
+      />
+    </IonList>
+  </IonContent>
 </template>
 
 <style scoped>
