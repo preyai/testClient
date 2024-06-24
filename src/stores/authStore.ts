@@ -2,6 +2,7 @@ import {defineStore} from 'pinia';
 import {Storage} from '@ionic/storage';
 import {computed, inject, ref} from 'vue';
 import useStorage from "@/hooks/useStorage";
+import api from "@/api";
 
 interface User {
     email: string;
@@ -71,9 +72,17 @@ export const useAuthStore = defineStore('auth', () => {
                 const storedUser = await storage.get('user');
                 const storedToken = await storage.get('token');
 
+
                 isAuthenticated.value = storedIsAuthenticated || false;
                 user.value = storedUser || null;
                 token.value = storedToken || null;
+
+                if (storedToken)
+                    api.post('authentication/ping')
+                        .catch(error => {
+                            if (error.message === '403' || error.message === '401')
+                                logout()
+                        });
             }
 
             // Геттеры

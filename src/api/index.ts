@@ -16,7 +16,9 @@ const request = async (url: string, method?: string, body?: string) => {
         headers,
         body
     })
-
+    if (!response.ok) {
+        throw new Error(response.status.toString());
+    }
     return await response.json()
 }
 
@@ -25,9 +27,10 @@ const get = async (url: string, params?: Record<string, string>) => {
     return await request(_url)
 }
 
-const post = async (url: string, params: object) => {
+const post = async (url: string, params?: object) => {
 
-    return await request(url, 'POST', JSON.stringify(params))
+    const body = params ? JSON.stringify(params) : undefined
+    return await request(url, 'POST', body)
 }
 
 const put = async (url: string, params: object) => {
