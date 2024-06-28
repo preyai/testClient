@@ -1,31 +1,45 @@
 <script setup lang="ts">
-import ItemsList from "@/components/ItemsList.vue";
-import {getHouses, updateHouse} from "@/api/houses";
-import EditableItem from "@/components/EditableItem.vue";
-import {IonPage} from "@ionic/vue";
+import {
+  IonContent,
+  IonHeader,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  useIonRouter
+} from '@ionic/vue';
 
-const fetchHouses = () => getHouses();
+const router = useIonRouter()
+const views = ['regions', 'areas', 'cities', 'settlements', 'streets', 'houses']
 
-const saveItem = async (updatedItem: Record<string, string>) => {
-  await updateHouse(Number(updatedItem.houseId), updatedItem);
-};
+const handler = (name: string) => {
+  router.push(`/addresses/${name}`)
+}
 
 </script>
 
 <template>
-  <IonPage>
-    <ItemsList
-        title="Addresses"
-        :fetchItems="fetchHouses"
-        filter-key="houseFull"
-    >
-      <template #default="{ item, onSave }">
-        <EditableItem :item="item" :saveItem="saveItem" titleKey="houseFull" @onSave="onSave"/>
-      </template>
-    </ItemsList>
+  <IonPage id="addresses">
+    <IonHeader>
+      <IonToolbar>
+        <IonTitle>addresses</IonTitle>
+      </IonToolbar>
+    </IonHeader>
+
+    <IonContent class="">
+      <IonList lines="full">
+        <IonItem v-for="view in views" :key="view" @click="handler(view)">
+          <IonLabel>{{ view }}</IonLabel>
+        </IonItem>
+      </IonList>
+    </IonContent>
+
   </IonPage>
+
 </template>
 
 <style scoped>
-/* ваши стили */
+
 </style>

@@ -1,11 +1,15 @@
 import {createRouter, createWebHistory} from '@ionic/vue-router';
 import {RouteRecordRaw} from 'vue-router';
-import SimplePage from "@/views/SimplePage.vue";
-import LoginPage from "@/views/LoginPage.vue";
 import AddressesPage from "@/views/AddressesPage.vue";
+import RegionsPage from "@/views/RegionsPage.vue";
+import AreasPage from "@/views/AreasPage.vue";
+import CitiesPage from "@/views/CitiesPage.vue";
+import SettlementsPage from "@/views/SettlementsPage.vue";
+import StreetsPage from "@/views/StreetsPage.vue";
+import HousesPage from "@/views/HousesPage.vue";
+import MainPage from "@/views/MainPage.vue";
+import LoginPage from '@/views/LoginPage.vue';
 import {useAuthStore} from "@/stores/authStore";
-import DomophonesPage from "@/views/DomophonesPage.vue";
-import CamerasPage from "@/views/CamerasPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -15,19 +19,41 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/',
-        component: SimplePage,
+        component: MainPage,
         children: [
             {
                 path: 'addresses',
-                component: AddressesPage
-            },
-            {
-                path: 'intercoms',
-                component: DomophonesPage
-            },
-            {
-                path: 'cameras',
-                component: CamerasPage
+                component: MainPage,
+                children: [
+                    {
+                        path: '',
+                        component: AddressesPage,
+                    },
+                    {
+                        path: 'regions',
+                        component: RegionsPage,
+                    },
+                    {
+                        path: 'areas',
+                        component: AreasPage,
+                    },
+                    {
+                        path: 'cities',
+                        component: CitiesPage,
+                    },
+                    {
+                        path: 'settlements',
+                        component: SettlementsPage,
+                    },
+                    {
+                        path: 'streets',
+                        component: StreetsPage,
+                    },
+                    {
+                        path: 'houses',
+                        component: HousesPage,
+                    },
+                ]
             }
         ]
     },

@@ -1,73 +1,50 @@
 <script setup lang="ts">
-import {ref} from 'vue';
-import {useAuthStore} from '@/stores/authStore';
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
+  IonButton,
   IonContent,
+  IonHeader,
   IonInput,
   IonItem,
-  IonLabel,
-  IonButton,
-  IonCheckbox,
+  IonList,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  useIonRouter
 } from '@ionic/vue';
-import {useRouter} from "vue-router";
+import {ref, watch} from "vue";
+import {useAuthStore} from "@/stores/authStore";
 
-const login = ref('');
-const password = ref('');
-const rememberMe = ref(false);
-const error = ref('');
+const authStore = useAuthStore()
+const {push} = useIonRouter()
+const username = ref("")
+const password = ref("")
 
+const handler = () => {
+  authStore.login({login: username.value, password: password.value, rememberMe: true})
+}
 
-const router = useRouter();
-const authStore = useAuthStore();
+watch(() => authStore.isAuthenticated, () => {
+  console.log("123")
+  push('/addresses')
+})
 
-const handleLogin = async () => {
-  const ua = navigator.userAgent;
-  const did = 'device_id_example'; // Замените на реальное устройство ID, если необходимо
-
-  authStore.login({login: login.value, password: password.value, rememberMe: rememberMe.value, ua, did})
-      .then(() => {
-        router.push('/');
-      })
-      .catch(e => {
-        error.value = e;
-      })
-};
 </script>
 
 <template>
   <IonPage>
     <IonHeader>
       <IonToolbar>
-        <IonTitle>Авторизация</IonTitle>
+        <IonTitle>login {{authStore.isAuthenticated}}</IonTitle>
       </IonToolbar>
     </IonHeader>
     <IonContent class="ion-padding">
-      <IonInput
-          v-model="login"
-          type="email"
-          label="Email"
-          labelPlacement="floating"
-      />
-      <IonInput
-          v-model="password"
-          type="password"
-          label="Пароль"
-          labelPlacement="floating"
-      />
-      <IonItem>
-        <IonLabel>Запомнить меня</IonLabel>
-        <IonCheckbox v-model="rememberMe"></IonCheckbox>
-      </IonItem>
-      <IonButton expand="block" @click="handleLogin">Войти</IonButton>
-      {{ error }}
+      <IonInput label="username" label-placement="floating" v-model="username"/>
+
+      <IonInput label="password" label-placement="floating" type="password" v-model="password"/>
+
+      <IonButton size="default" expand="block" @click="handler">Войти</IonButton>
     </IonContent>
   </IonPage>
 </template>
 
-<style scoped>
-/* Добавьте ваш CSS здесь */
-</style>
+<style scoped></style>
