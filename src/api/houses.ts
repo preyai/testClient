@@ -16,13 +16,10 @@ export interface House extends apiItem {
 const listUrl = 'addresses/addresses'
 const singleUrl = 'addresses/house'
 
-const getHouses = async (houseId?: number): Promise<House[]> => {
+const getHouses = async (): Promise<House[]> => {
     const params: Record<string, string> = {
         include: 'houses',
     }
-
-    if (houseId)
-        params['houseId'] = houseId.toString()
 
     const data = await api.get(listUrl, params)
 

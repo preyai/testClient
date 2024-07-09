@@ -4,7 +4,7 @@ import {useAuthStore} from "@/stores/authStore";
 const request = async (url: string, method?: string, body?: string) => {
     const auth = useAuthStore()
 
-    const SERVER_URL = 'https://rbt-demo.lanta.me/frontend'
+    const SERVER_URL = 'https://preyai.ddns.net/frontend'
 
     const headers = new Headers({
         authorization: `Bearer ${auth.token}`
