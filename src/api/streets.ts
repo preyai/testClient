@@ -1,5 +1,5 @@
-import api from "@/api";
 import {apiItem} from "@/types/data";
+import addressesApi from "@/api/addresses";
 
 export interface Street extends apiItem {
     "streetId": number,
@@ -12,23 +12,6 @@ export interface Street extends apiItem {
     "cityId": number,
 }
 
-const listUrl = 'addresses/addresses'
-const singleUrl = 'addresses/street'
+const {getList} = addressesApi<Street>({name: 'streets', singleName: 'street'})
 
-const getStreets = async (query?: { cityId?: number, settlementId?: number }) => {
-    const params: Record<string, string> = {
-        include: 'streets',
-    }
-
-    if (query?.cityId)
-        params.cityId = query.cityId.toString()
-
-    if (query?.settlementId)
-        params.settlementId = query.settlementId.toString()
-
-    const data = await api.get(listUrl, params)
-
-    return data.addresses.streets
-}
-
-export {getStreets}
+export {getList as getStreets}

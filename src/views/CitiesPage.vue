@@ -1,15 +1,6 @@
 <script setup lang="ts">
 
-import {
-  IonBackButton,
-  IonButtons,
-  IonContent,
-  IonHeader, IonList,
-  IonPage,
-  IonRouterOutlet,
-  IonTitle,
-  IonToolbar
-} from "@ionic/vue";
+import {IonContent, IonList, IonPage} from "@ionic/vue";
 import AddressesListItem from "@/components/AddressesListItem.vue";
 import {onMounted, onUnmounted, ref} from "vue";
 import {City, getCities} from "@/api/cities";
@@ -27,7 +18,7 @@ onMounted(() => {
       .then(result => cities.value = result)
 })
 
-onUnmounted(()=>{
+onUnmounted(() => {
   addressesStore.selectCity()
 })
 </script>

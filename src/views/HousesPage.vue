@@ -1,36 +1,49 @@
 <script setup lang="ts">
 
-import {
-  IonBackButton,
-  IonButtons,
-  IonContent,
-  IonHeader, IonList,
-  IonPage,
-  IonRouterOutlet,
-  IonTitle,
-  IonToolbar
-} from "@ionic/vue";
+import {IonContent, IonList, IonPage, SearchbarCustomEvent} from "@ionic/vue";
 import AddressesHeader from "@/components/AddressesHeader.vue";
 import AddressesListItem from "@/components/AddressesListItem.vue";
-import {onMounted, ref} from "vue";
-import {getStreets, Street} from "@/api/streets";
+import {computed, onMounted, onUnmounted, ref} from "vue";
 import {getHouses, House} from "@/api/houses";
+import {useAddressesStore} from "@/stores/addressesStore";
+
+const addressesStore = useAddressesStore()
 
 const houses = ref<House[]>([])
+const search = ref<string>()
+const list = computed(() => houses.value.filter((item) => {
+  if (!search.value)
+    return true
+  for (const itemKey in item) {
+    if (item[itemKey] && item[itemKey].toString().toLowerCase().match(search.value))
+      return true
+  }
+}))
+
+const searchHandler = (event: SearchbarCustomEvent) => {
+  search.value = event.target.value?.toLowerCase()
+}
 
 onMounted(() => {
-  getHouses()
+  getHouses({
+    streetId: addressesStore.street?.streetId,
+    settlementId: addressesStore.settlement?.settlementId
+  })
       .then(result => houses.value = result)
+})
+
+onUnmounted(() => {
+  addressesStore.selectHouse()
 })
 </script>
 
 <template>
   <IonPage>
-    <AddressesHeader label="houses"/>
+    <AddressesHeader label="houses" @onSearch="searchHandler"/>
     <IonContent>
       <IonList>
         <AddressesListItem
-            v-for="house in houses"
+            v-for="house in list"
             :key="house.houseUuid"
             :item="house"
             label-key="houseFull"

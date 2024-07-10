@@ -2,7 +2,7 @@
 
 import {IonContent, IonList, IonPage} from "@ionic/vue";
 import AddressesHeader from "@/components/AddressesHeader.vue";
-import {onMounted, ref} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import {getStreets, Street} from "@/api/streets";
 import AddressesListItem from "@/components/AddressesListItem.vue";
 import {useAddressesStore} from "@/stores/addressesStore";
@@ -17,6 +17,9 @@ onMounted(() => {
     settlementId: addressesStore.settlement?.settlementId,
   })
       .then(result => streets.value = result)
+})
+onUnmounted(() => {
+  addressesStore.selectStreet()
 })
 </script>
 

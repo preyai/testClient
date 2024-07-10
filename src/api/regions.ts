@@ -1,5 +1,5 @@
-import api from "@/api";
 import {apiItem} from "@/types/data";
+import addressesApi from "@/api/addresses";
 
 export interface Region extends apiItem {
     "regionId": number,
@@ -12,17 +12,8 @@ export interface Region extends apiItem {
     "timezone": string
 }
 
-const listUrl = 'addresses/addresses'
-const singleUrl = 'addresses/region'
+const {getList} = addressesApi<Region>({name: 'regions', singleName: 'region'})
 
-const getRegions = async () => {
-    const params: Record<string, string> = {
-        include: 'regions',
-    }
-
-    const data = await api.get(listUrl, params)
-
-    return data.addresses.regions
+export {
+    getList as getRegions,
 }
-
-export {getRegions}

@@ -1,32 +1,30 @@
 <script setup lang="ts">
 
-import {
-  IonButtons,
-  IonBackButton,
-  IonPage,
-  IonRouterOutlet,
-  IonContent,
-  IonToolbar,
-  IonTitle,
-  IonHeader, IonList, IonItem, IonLabel, useIonRouter
-} from "@ionic/vue";
+import {IonContent, IonList, IonPage, useIonRouter} from "@ionic/vue";
 import {Area, getAreas} from "@/api/areas";
-import {onMounted, ref} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import AddressesListItem from "@/components/AddressesListItem.vue";
 import AddressesHeader from "@/components/AddressesHeader.vue";
+import {useAddressesStore} from "@/stores/addressesStore";
 
-const router = useIonRouter()
+const addressesStore = useAddressesStore()
 const areas = ref<Area[]>([])
+const search = ref<string>()
 
 onMounted(() => {
-  getAreas()
+  getAreas({
+    regionId: addressesStore.region?.regionId
+  })
       .then(result => {
-        if (result.length > 0)
-          areas.value = result
-        else
-          router.replace('/addresses/cities')
+        areas.value = result
       })
 })
+
+onUnmounted(() => {
+  addressesStore.selectArea()
+})
+
+
 </script>
 
 <template>

@@ -11,17 +11,25 @@ import {
   IonToolbar
 } from "@ionic/vue";
 import AddressesListItem from "@/components/AddressesListItem.vue";
-import {onMounted, ref} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import {getSettlements, Settlement} from "@/api/settlements";
 import AddressesHeader from "@/components/AddressesHeader.vue";
+import {useAddressesStore} from "@/stores/addressesStore";
+
+const addressesStore = useAddressesStore()
 
 const settlements = ref<Settlement[]>([])
 
 onMounted(() => {
-  getSettlements()
+  getSettlements({
+    areaId: addressesStore.area?.areaId,
+    cityId: addressesStore.city?.cityId
+  })
       .then(result => settlements.value = result)
 })
-
+onUnmounted(() => {
+  addressesStore.selectSettlement()
+})
 </script>
 
 <template>

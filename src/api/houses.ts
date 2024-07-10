@@ -1,5 +1,5 @@
-import api from "@/api";
 import {apiItem} from "@/types/data";
+import addressesApi from "@/api/addresses";
 
 export interface House extends apiItem {
     houseId: number,
@@ -13,21 +13,9 @@ export interface House extends apiItem {
     companyId: number | null,
 }
 
-const listUrl = 'addresses/addresses'
-const singleUrl = 'addresses/house'
+const {getList, updateItem} = addressesApi<House>({name: 'houses', singleName: 'house'})
 
-const getHouses = async (): Promise<House[]> => {
-    const params: Record<string, string> = {
-        include: 'houses',
-    }
-
-    const data = await api.get(listUrl, params)
-
-    return data.addresses.houses
+export {
+    getList as getHouses,
+    updateItem as updateHouse
 }
-
-const updateHouse = async (houseId: number, data: Record<string, string>) => {
-    await api.put(`${singleUrl}`, {_id: houseId, ...data})
-}
-
-export {getHouses, updateHouse}
