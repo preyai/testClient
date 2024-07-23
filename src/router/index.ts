@@ -71,7 +71,8 @@ router.beforeEach(async (to) => {
         await authStore.loadAuthState()
     if (to.name !== 'Login' && !authStore.isAuthenticated)
         return '/login'
-
+    if (to.path === '/')
+        return '/addresses'
 })
 
 export default router
