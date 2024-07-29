@@ -10,6 +10,10 @@ import HousesPage from "@/views/HousesPage.vue";
 import MainPage from "@/views/MainPage.vue";
 import LoginPage from '@/views/LoginPage.vue';
 import {useAuthStore} from "@/stores/authStore";
+import SimplePage from "@/views/SimplePage.vue";
+import SettingsPage from "@/views/SettingsPage.vue";
+import IssuesPage from "@/views/IssuesPage.vue";
+import FiltersPage from "@/views/FiltersPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -23,7 +27,7 @@ const routes: Array<RouteRecordRaw> = [
         children: [
             {
                 path: 'addresses',
-                component: MainPage,
+                component: SimplePage,
                 children: [
                     {
                         path: '',
@@ -53,6 +57,35 @@ const routes: Array<RouteRecordRaw> = [
                         path: 'houses',
                         component: HousesPage,
                     },
+                ]
+            },
+            {
+                path: 'tt',
+                component: SimplePage,
+                children: [
+                    {
+                        path: '',
+                        redirect:'/tt/filters'
+                        // component: SimplePage
+                    },
+                    {
+                        path: 'issues',
+                        component: IssuesPage,
+                    },
+                    {
+                        path: 'filters',
+                        component: FiltersPage,
+                    }
+                ]
+            },
+            {
+                path: 'settings',
+                component: SimplePage,
+                children: [
+                    {
+                        path: '',
+                        component: SettingsPage
+                    }
                 ]
             }
         ]

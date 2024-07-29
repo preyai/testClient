@@ -14,18 +14,42 @@ export default defineConfig({
         VitePWA({
             registerType: 'autoUpdate',
             manifest:{
-                theme_color:'#4DBA87',
+                theme_color:'#007bff',
                 background_color:'#FFFFFF',
+                display:'standalone',
                 icons:[
                     {
-                        src:'/192.png',
+                        src:'/pwa/64.png',
+                        sizes: '64x64',
+                        type: 'image/png'
+                    },
+                    {
+                        src:'/pwa/192.png',
                         sizes: '192x192',
                         type: 'image/png'
                     },
                     {
-                        src:'/512.png',
+                        src:'/pwa/256.png',
+                        sizes: '256x256',
+                        type: 'image/png'
+                    },
+                    {
+                        src:'/pwa/512.png',
                         sizes: '512x512',
                         type: 'image/png'
+                    }
+                ],
+                screenshots:[
+                    {
+                        src:'/pwa/screenshot_PC.png',
+                        type: 'image/jpg',
+                        sizes: '2880x1800',
+                        form_factor:'wide'
+                    },
+                    {
+                        src:'/pwa/screenshot_iPhone_XR.png',
+                        type: 'image/jpg',
+                        sizes: '828x1792'
                     }
                 ]
             },

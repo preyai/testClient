@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import {
-  IonToolbar,
+  IonContent,
   IonHeader,
-  IonTitle, IonContent, IonMenu, IonList, IonItem, IonButton, IonLabel, useIonRouter, menuController
+  IonItem,
+  IonLabel,
+  IonList,
+  IonMenu,
+  IonTitle,
+  IonToolbar,
+  menuController
 } from '@ionic/vue';
 import {watch} from "vue";
 import {useRouter} from "vue-router";
