@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {IonRouterOutlet, IonPage, IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel} from '@ionic/vue';
-import {business, cog, list, logoIonic, search} from "ionicons/icons";
+import {IonIcon, IonLabel, IonPage, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs} from '@ionic/vue';
+import {business, cog, list} from "ionicons/icons";
 
 const tabs = [
   {
@@ -24,8 +24,8 @@ const tabs = [
       <IonRouterOutlet/>
       <IonTabBar slot="bottom">
         <IonTabButton v-for="tab in tabs" :key="tab.name" :tab="tab.name" :href="`/${tab.name}`">
-          <IonIcon :icon="tab.icon" />
-          <IonLabel>{{tab.name}}</IonLabel>
+          <IonIcon :icon="tab.icon"/>
+          <IonLabel>{{ tab.name }}</IonLabel>
         </IonTabButton>
       </IonTabBar>
     </IonTabs>

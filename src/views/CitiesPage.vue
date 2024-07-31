@@ -4,8 +4,8 @@ import {IonContent, IonList, IonPage} from "@ionic/vue";
 import AddressesListItem from "@/components/AddressesListItem.vue";
 import {onMounted, onUnmounted, ref} from "vue";
 import {City, getCities} from "@/api/cities";
-import AddressesHeader from "@/components/AddressesHeader.vue";
 import {useAddressesStore} from "@/stores/addressesStore";
+import PageHeader from "@/components/PageHeader.vue";
 
 const addressesStore = useAddressesStore()
 const cities = ref<City[]>()
@@ -25,8 +25,11 @@ onUnmounted(() => {
 
 <template>
   <IonPage>
-    <AddressesHeader label="cities"/>
-
+    <PageHeader
+        label="cities"
+        defaultHref="/addresses"
+        search
+    />
     <IonContent>
       <IonList>
         <AddressesListItem

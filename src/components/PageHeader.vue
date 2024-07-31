@@ -10,7 +10,11 @@ import {
   SearchbarCustomEvent
 } from "@ionic/vue";
 
-const {label} = defineProps<{ label: string }>()
+const {label, search = false, defaultHref = '/'} = defineProps<{
+  label: string,
+  search?: boolean,
+  defaultHref?: string
+}>()
 const emit = defineEmits<{
   onSearch: [event: SearchbarCustomEvent]
 }>()
@@ -20,11 +24,11 @@ const emit = defineEmits<{
   <IonHeader>
     <IonToolbar>
       <IonButtons slot="start">
-        <IonBackButton defaultHref="/addresses"/>
+        <IonBackButton :defaultHref="defaultHref"/>
       </IonButtons>
       <IonTitle>{{ label }}</IonTitle>
     </IonToolbar>
-    <IonToolbar>
+    <IonToolbar v-if="search">
       <IonSearchbar @ionInput="emit('onSearch', $event)"/>
     </IonToolbar>
   </IonHeader>

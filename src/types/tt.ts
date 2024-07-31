@@ -17,7 +17,7 @@ export interface Meta {
     favoriteFilters: any[];
 }
 
-interface Project {
+export interface Project {
     projectId: number;
     acronym: string;
     project: string;
@@ -142,3 +142,75 @@ interface Print {
 }
 
 //
+
+interface Comment {
+    created: number;
+    type: boolean;
+    private: boolean;
+    author: string;
+    body: string;
+}
+
+interface Comments {
+    [key: string]: Comment;
+}
+
+interface Metadata {
+    type: string;
+    attachman: string;
+    project: string;
+    date: number;
+    issue: boolean;
+    added: number;
+    issueId: string;
+}
+
+interface UploadDate {
+    $date: {
+        $numberLong: string;
+    };
+}
+
+interface Attachment {
+    metadata: Metadata;
+    filename: string;
+    chunkSize: number;
+    id: string;
+    length: number;
+    md5: string;
+    uploadDate: UploadDate;
+}
+
+export interface Issue {
+    subject: string;
+    status: string;
+    workflow: string;
+    issueId: string;
+    id: string;
+}
+
+export interface DetailIssue extends Issue {
+    assigned: string;
+    catalog: string;
+    comments: Comments;
+    updated: number;
+    project: string;
+    created: number;
+    tags: string[];
+    author: string;
+    description: string;
+    attachments: Attachment[]
+    childrens: DataStructure;
+    resolution: string;
+    watchers: string[];
+}
+
+export interface DataStructure {
+    issues: Issue[];
+    projection: Record<string, number>;
+    sort: Record<string, number>;
+    skip: number;
+    limit: string;
+    count: number;
+    all: string[];
+}

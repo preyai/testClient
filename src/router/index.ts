@@ -14,6 +14,7 @@ import SimplePage from "@/views/SimplePage.vue";
 import SettingsPage from "@/views/SettingsPage.vue";
 import IssuesPage from "@/views/IssuesPage.vue";
 import FiltersPage from "@/views/FiltersPage.vue";
+import ProjectsPage from "@/views/ProjectsPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -65,8 +66,12 @@ const routes: Array<RouteRecordRaw> = [
                 children: [
                     {
                         path: '',
-                        redirect:'/tt/filters'
+                        redirect: '/tt/projects'
                         // component: SimplePage
+                    },
+                    {
+                        path: 'projects',
+                        component: ProjectsPage,
                     },
                     {
                         path: 'issues',

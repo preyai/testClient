@@ -1,11 +1,11 @@
 <script setup lang="ts">
 
-import {IonBackButton, IonButtons, IonContent, IonHeader, IonList, IonPage, IonTitle, IonToolbar} from "@ionic/vue";
+import {IonContent, IonList, IonPage} from "@ionic/vue";
 import {onMounted, onUnmounted, ref} from "vue";
 import {getRegions, Region} from "@/api/regions";
 import AddressesListItem from "@/components/AddressesListItem.vue";
-import AddressesHeader from "@/components/AddressesHeader.vue";
 import {useAddressesStore} from "@/stores/addressesStore";
+import PageHeader from "@/components/PageHeader.vue";
 
 const addressesStore = useAddressesStore()
 
@@ -25,7 +25,11 @@ onUnmounted(()=>{
 
 <template>
   <IonPage>
-    <AddressesHeader label="regions"/>
+    <PageHeader
+        label="regions"
+        defaultHref="/addresses"
+        search
+    />
     <IonContent>
       <IonList>
         <AddressesListItem

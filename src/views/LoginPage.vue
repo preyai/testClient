@@ -20,6 +20,7 @@ const username = ref("")
 const password = ref("")
 
 const handler = () => {
+  console.log("wtf")
   authStore.login({login: username.value, password: password.value, rememberMe: true})
 }
 
@@ -34,15 +35,17 @@ watch(() => authStore.isAuthenticated, () => {
   <IonPage>
     <IonHeader>
       <IonToolbar>
-        <IonTitle>login {{authStore.isAuthenticated}}</IonTitle>
+        <IonTitle>login {{ authStore.isAuthenticated }}</IonTitle>
       </IonToolbar>
     </IonHeader>
-    <IonContent class="ion-padding">
-      <IonInput label="username" label-placement="floating" v-model="username"/>
+    <IonContent c class="ion-padding">
+      <form @submit.prevent="handler">
+        <IonInput label="username" label-placement="floating" v-model="username"/>
 
-      <IonInput label="password" label-placement="floating" type="password" v-model="password"/>
+        <IonInput label="password" label-placement="floating" type="password" v-model="password"/>
 
-      <IonButton size="default" expand="block" @click="handler">Войти</IonButton>
+        <IonButton type="submit" size="default" expand="block" >Войти</IonButton>
+      </form>
     </IonContent>
   </IonPage>
 </template>

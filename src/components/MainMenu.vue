@@ -17,7 +17,6 @@ const router = useRouter()
 
 watch(router.currentRoute, () => {
   menuController.close('addresses-menu')
-  console.log(router.currentRoute)
 })
 </script>
 

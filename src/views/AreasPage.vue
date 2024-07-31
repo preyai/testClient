@@ -1,11 +1,11 @@
 <script setup lang="ts">
 
-import {IonContent, IonList, IonPage, useIonRouter} from "@ionic/vue";
+import {IonContent, IonList, IonPage} from "@ionic/vue";
 import {Area, getAreas} from "@/api/areas";
 import {onMounted, onUnmounted, ref} from "vue";
 import AddressesListItem from "@/components/AddressesListItem.vue";
-import AddressesHeader from "@/components/AddressesHeader.vue";
 import {useAddressesStore} from "@/stores/addressesStore";
+import PageHeader from "@/components/PageHeader.vue";
 
 const addressesStore = useAddressesStore()
 const areas = ref<Area[]>([])
@@ -29,7 +29,11 @@ onUnmounted(() => {
 
 <template>
   <IonPage>
-    <AddressesHeader label="areas"/>
+    <PageHeader
+        label="areas"
+        defaultHref="/addresses"
+        search
+    />
     <IonContent>
       <IonList>
         <AddressesListItem

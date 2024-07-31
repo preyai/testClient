@@ -16,10 +16,15 @@ const request = async (url: string, method?: string, body?: string) => {
         headers,
         body
     })
-    if (!response.ok) {
-        throw new Error(response.status.toString());
+    const json = await response.json()
+    if (json && json.error && json.error === 'tokenNotFound') {
+        await useAuthStore().logout()
+        return json
     }
-    return await response.json()
+    if (!response.ok) {
+        throw new Error(response.status.toString())
+    }
+    return json
 }
 
 const get = async (url: string, params?: Record<string, string>) => {

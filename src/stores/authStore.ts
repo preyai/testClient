@@ -2,6 +2,7 @@ import {defineStore} from 'pinia';
 import {computed, ref} from 'vue';
 import useStorage from "@/hooks/useStorage";
 import api from "@/api";
+import {useRouter} from "vue-router";
 
 
 export const useAuthStore = defineStore('auth', () => {
@@ -10,6 +11,7 @@ export const useAuthStore = defineStore('auth', () => {
     const user = ref<string | null>(null);
     const token = ref<string | null>(null);
     const storage = useStorage()
+    const router = useRouter()
 
     // Действия
     async function login(credentials: {
@@ -49,6 +51,8 @@ export const useAuthStore = defineStore('auth', () => {
 
         await storage.remove('user');
         await storage.remove('token');
+
+        await router.replace('/login')
     }
 
     async function loadAuthState() {
@@ -60,7 +64,7 @@ export const useAuthStore = defineStore('auth', () => {
 
         if (storedToken) {
             isAuthenticated.value = true
-            api.post('authentication/ping')
+            api.post('server/ping')
                 .catch(error => {
                     if (error.message === '403' || error.message === '401')
                         logout()

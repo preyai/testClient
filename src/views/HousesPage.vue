@@ -1,11 +1,11 @@
 <script setup lang="ts">
 
 import {IonContent, IonList, IonPage, SearchbarCustomEvent} from "@ionic/vue";
-import AddressesHeader from "@/components/AddressesHeader.vue";
 import AddressesListItem from "@/components/AddressesListItem.vue";
 import {computed, onMounted, onUnmounted, ref} from "vue";
 import {getHouses, House} from "@/api/houses";
 import {useAddressesStore} from "@/stores/addressesStore";
+import PageHeader from "@/components/PageHeader.vue";
 
 const addressesStore = useAddressesStore()
 
@@ -39,7 +39,12 @@ onUnmounted(() => {
 
 <template>
   <IonPage>
-    <AddressesHeader label="houses" @onSearch="searchHandler"/>
+    <PageHeader
+        label="houses"
+        defaultHref="/addresses"
+        search
+        @onSearch="searchHandler"
+    />
     <IonContent>
       <IonList>
         <AddressesListItem
