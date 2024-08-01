@@ -3,12 +3,15 @@
 import {
   IonBackButton,
   IonButtons,
+  IonButton,
+  IonIcon,
   IonHeader,
   IonTitle,
   IonToolbar,
   IonSearchbar,
   SearchbarCustomEvent
 } from "@ionic/vue";
+import {ellipsisHorizontal, ellipsisVertical} from "ionicons/icons";
 
 const {label, search = false, defaultHref = '/'} = defineProps<{
   label: string,
@@ -25,6 +28,11 @@ const emit = defineEmits<{
     <IonToolbar>
       <IonButtons slot="start">
         <IonBackButton :defaultHref="defaultHref"/>
+      </IonButtons>
+      <IonButtons slot="end">
+        <IonButton>
+          <IonIcon slot="icon-only" :ios="ellipsisHorizontal" :md="ellipsisVertical"></IonIcon>
+        </IonButton>
       </IonButtons>
       <IonTitle>{{ label }}</IonTitle>
     </IonToolbar>

@@ -2,7 +2,7 @@
 
 import {IonContent, IonItem, IonLabel, IonList, IonPage} from "@ionic/vue";
 import {useTtStore} from "@/stores/ttStore";
-import {computed} from "vue";
+import {computed, nextTick} from "vue";
 import {Project} from "@/types/tt";
 import {useRouter} from "vue-router";
 import PageHeader from "@/components/PageHeader.vue";
@@ -11,9 +11,10 @@ const router = useRouter()
 const ttStore = useTtStore()
 const projects = computed(() => ttStore.meta?.projects)
 
-const handler = (project: Project) => {
+const handler = async (project: Project) => {
   ttStore.setProject(project)
-  router.push('/tt/filters')
+  await nextTick()
+  await router.push('/tt/filters')
 }
 
 </script>

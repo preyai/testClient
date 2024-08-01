@@ -15,6 +15,7 @@ import SettingsPage from "@/views/SettingsPage.vue";
 import IssuesPage from "@/views/IssuesPage.vue";
 import FiltersPage from "@/views/FiltersPage.vue";
 import ProjectsPage from "@/views/ProjectsPage.vue";
+import IssuePage from "@/views/IssuePage.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -74,12 +75,16 @@ const routes: Array<RouteRecordRaw> = [
                         component: ProjectsPage,
                     },
                     {
+                        path: 'filters',
+                        component: FiltersPage,
+                    },
+                    {
                         path: 'issues',
                         component: IssuesPage,
                     },
                     {
-                        path: 'filters',
-                        component: FiltersPage,
+                        path: 'issue',
+                        component: IssuePage,
                     }
                 ]
             },

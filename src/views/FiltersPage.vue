@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import {IonContent, IonItem, IonLabel, IonList, IonPage} from "@ionic/vue";
-import {computed, onMounted} from "vue";
+import {computed, nextTick, onMounted} from "vue";
 import {useTtStore} from "@/stores/ttStore";
 import PageHeader from "@/components/PageHeader.vue";
 import {useRouter} from "vue-router";
@@ -10,11 +10,16 @@ const router = useRouter()
 const ttStore = useTtStore()
 const filters = computed(() => ttStore.project?.filters)
 
-const handler = (filter: string) => {
+const handler = async (filter: string) => {
   ttStore.setFilter(filter)
-  router.push('/tt/issues')
+  await nextTick()
+  await router.push('/tt/issues')
 }
 
+onMounted(() => {
+  if (!filters.value)
+    router.replace('/tt')
+})
 </script>
 
 <template>

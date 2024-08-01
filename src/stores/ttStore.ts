@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import {computed, onMounted, ref} from "vue";
-import {Meta, Project} from "@/types/tt";
+import {DataStructure, IssueData, Meta, Project} from "@/types/tt";
 import api from "@/api";
 
 export const useTtStore = defineStore('tt', () => {
@@ -8,6 +8,7 @@ export const useTtStore = defineStore('tt', () => {
     const meta = ref<Meta>()
     const project = ref<Project>()
     const filter = ref<string>()
+    const issue = ref<string>()
     // const tasks
 
     // actions
@@ -26,13 +27,36 @@ export const useTtStore = defineStore('tt', () => {
         filter.value = value
     }
 
-    const loadIssues = () => {
-        return api.get('tt/issues', {
-            project: 'TT',
-            filter: 'all',
-            skip: '0',
-            limit: '50'
-        });
+    const setIssue = (issueId: string) => {
+        issue.value = issueId
+    }
+
+    const getIssues = async (limit: number, skip: number): Promise<DataStructure> => {
+        if (!project.value || !filter.value)
+            return Promise.reject()
+        try {
+            const res = await api.get('tt/issues', {
+                project: project.value?.acronym,
+                filter: filter.value,
+                skip: skip.toString(),
+                limit: limit.toString()
+            })
+
+            return res.issues
+        } catch (err) {
+            return Promise.reject()
+        }
+    }
+
+    const getIssue = async (): Promise<IssueData> => {
+        if (!issue.value)
+            return Promise.reject()
+        try {
+            const res = await api.get(`tt/issue/${issue.value}`)
+            return res.issue
+        } catch (err) {
+            return Promise.reject()
+        }
     }
 
     // getters
@@ -40,6 +64,7 @@ export const useTtStore = defineStore('tt', () => {
         meta: computed(() => meta.value),
         project: computed(() => project.value),
         filter: computed(() => filter.value),
+        issue: computed(() => issue.value),
     }
 
     onMounted(load)
@@ -48,7 +73,9 @@ export const useTtStore = defineStore('tt', () => {
         load,
         setProject,
         setFilter,
-        loadIssues,
+        setIssue,
+        getIssues,
+        getIssue,
         ...getters
     }
 })

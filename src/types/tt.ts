@@ -142,17 +142,12 @@ interface Print {
 }
 
 //
-
 interface Comment {
     created: number;
     type: boolean;
     private: boolean;
     author: string;
     body: string;
-}
-
-interface Comments {
-    [key: string]: Comment;
 }
 
 interface Metadata {
@@ -190,26 +185,33 @@ export interface Issue {
 }
 
 export interface DetailIssue extends Issue {
-    assigned: string;
-    catalog: string;
-    comments: Comments;
-    updated: number;
-    project: string;
     created: number;
+    assigned: string[];
+    description: string;
     tags: string[];
     author: string;
-    description: string;
-    attachments: Attachment[]
+    attachments: Attachment[];
+    comments: Record<number, Comment>
+    updated: number;
+    catalog: string;
+    project: string;
     childrens: DataStructure;
-    resolution: string;
     watchers: string[];
+    [key: string]: any;
+}
+
+export interface IssueData {
+    fields: Record<number, string>;
+    issue: DetailIssue;
+    actions: Record<number, string>;
+    showJournal: boolean;
 }
 
 export interface DataStructure {
     issues: Issue[];
     projection: Record<string, number>;
     sort: Record<string, number>;
-    skip: number;
+    skip: string;
     limit: string;
     count: number;
     all: string[];
