@@ -8,7 +8,7 @@ export const useTtStore = defineStore('tt', () => {
     const meta = ref<Meta>()
     const project = ref<Project>()
     const filter = ref<string>()
-    const issue = ref<string>()
+    const issue = ref<IssueData>()
     // const tasks
 
     // actions
@@ -28,7 +28,8 @@ export const useTtStore = defineStore('tt', () => {
     }
 
     const setIssue = (issueId: string) => {
-        issue.value = issueId
+        getIssue(issueId)
+            .then(res => issue.value = res)
     }
 
     const getIssues = async (limit: number, skip: number): Promise<DataStructure> => {
@@ -48,15 +49,17 @@ export const useTtStore = defineStore('tt', () => {
         }
     }
 
-    const getIssue = async (): Promise<IssueData> => {
-        if (!issue.value)
-            return Promise.reject()
+    const getIssue = async (issueId: string): Promise<IssueData> => {
         try {
-            const res = await api.get(`tt/issue/${issue.value}`)
+            const res = await api.get(`tt/issue/${issueId}`)
             return res.issue
         } catch (err) {
             return Promise.reject()
         }
+    }
+
+    const addComment = (comment: string, commentPrivate: boolean) => {
+        return api.post('tt/comment', {issueId: issue.value?.issue.issueId, comment, commentPrivate})
     }
 
     // getters
@@ -76,6 +79,7 @@ export const useTtStore = defineStore('tt', () => {
         setIssue,
         getIssues,
         getIssue,
+        addComment,
         ...getters
     }
 })

@@ -4,7 +4,7 @@ import {useAuthStore} from "@/stores/authStore";
 const request = async (url: string, method?: string, body?: string) => {
     const auth = useAuthStore()
 
-    const SERVER_URL = 'https://preyai.ddns.net/frontend'
+    const SERVER_URL = import.meta.env.VITE_SERVER_URL
 
     const headers = new Headers({
         authorization: `Bearer ${auth.token}`
