@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {computed, onMounted, ref} from "vue";
 import {DataStructure, IssueData, Meta, Project} from "@/types/tt";
 import api from "@/api";
+import {useAttachments} from "@/hooks/useAttachments";
 
 export const useTtStore = defineStore('tt', () => {
     // state
@@ -60,6 +61,10 @@ export const useTtStore = defineStore('tt', () => {
 
     const addComment = (comment: string, commentPrivate: boolean) => {
         return api.post('tt/comment', {issueId: issue.value?.issue.issueId, comment, commentPrivate})
+    }
+
+    const addAttachment = () => {
+
     }
 
     // getters

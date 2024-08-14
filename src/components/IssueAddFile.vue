@@ -13,9 +13,11 @@ import {
 } from "@ionic/vue";
 import {ref} from "vue";
 import {useTtStore} from "@/stores/ttStore";
+import {useAttachments} from "@/hooks/useAttachments";
+import {CameraSource} from "@capacitor/camera";
 
 const tt = useTtStore()
-
+const {takePhoto} = useAttachments()
 const comment = ref<string>("");
 const commentPrivate = ref(true);
 
@@ -26,6 +28,11 @@ const confirm = () => {
           modalController.dismiss(null, 'confirm')
       )
 }
+
+const handler = () => {
+  takePhoto(CameraSource.Photos);
+}
+
 </script>
 
 <template>
@@ -34,21 +41,14 @@ const confirm = () => {
       <IonButtons slot="start">
         <IonButton color="medium" @click="cancel">Cancel</IonButton>
       </IonButtons>
-      <IonTitle>Add comment</IonTitle>
+      <IonTitle>Add file</IonTitle>
       <IonButtons slot="end">
         <IonButton @click="confirm" :strong="true">Confirm</IonButton>
       </IonButtons>
     </IonToolbar>
   </IonHeader>
   <IonContent class="ion-padding">
-    <IonItem>
-      <IonTextarea label-placement="floating" label="comment" placeholder="Type something here" v-model="comment"/>
-    </IonItem>
-    <IonItem>
-      <IonCheckbox id="terms" v-model="commentPrivate">
-        <div class="ion-text-wrap">comment private</div>
-      </IonCheckbox>
-    </IonItem>
+    <IonButton @click="handler">123</IonButton>
   </IonContent>
 </template>
 

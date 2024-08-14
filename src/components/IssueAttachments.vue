@@ -8,12 +8,14 @@ import {
   IonFab,
   IonFabButton,
   IonIcon,
-  IonList
+  IonList, modalController
 } from "@ionic/vue";
 import {useAuthStore} from "@/stores/authStore";
 import dayjs from "dayjs";
 import {add} from "ionicons/icons";
-import {usePhotoGallery} from "@/hooks/usePhotoGallery";
+import {useTtStore} from "@/stores/ttStore";
+import IssueAddComment from "@/components/IssueAddComment.vue";
+import IssueAddFile from "@/components/IssueAddFile.vue";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
@@ -22,21 +24,24 @@ const {issue} = defineProps<{
 }>()
 
 const {token} = useAuthStore()
-const {photos, takePhoto} = usePhotoGallery();
+const tt = useTtStore()
+
+const openModal = async () => {
+  const modal = await modalController.create({
+    component: IssueAddFile,
+  });
+
+  await modal.present();
+
+  const {role} = await modal.onWillDismiss();
+
+  if (role === 'confirm' && tt.issue)
+    tt.setIssue(tt.issue.issue.issueId);
+};
+// const {photos, takePhoto} = useAttachments();
 </script>
 
 <template>
-  <ion-content>
-    <ion-grid>
-      <ion-row>
-        <ion-col size="6" :key="photo.filepath" v-for="photo in photos">
-          <ion-img :src="photo.webviewPath"></ion-img>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-
-    <ion-fab/>
-  </ion-content>
   <IonList>
     <IonItem v-for="img of issue.issue.attachments" :key="img.id">
       <IonCard>
@@ -50,6 +55,7 @@ const {photos, takePhoto} = usePhotoGallery();
             }}
           </IonCardTitle>
           <IonCardSubtitle>{{ img.filename }}</IonCardSubtitle>
+
         </IonCardHeader>
         <IonCardContent>
 
@@ -58,7 +64,7 @@ const {photos, takePhoto} = usePhotoGallery();
     </IonItem>
   </IonList>
   <IonFab slot="fixed" vertical="bottom" horizontal="end">
-    <IonFabButton @click="takePhoto">
+    <IonFabButton @click="openModal">
       <IonIcon :icon="add"></IonIcon>
     </IonFabButton>
   </IonFab>

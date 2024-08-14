@@ -2,19 +2,17 @@
 import {IssueData} from "@/types/tt";
 import {
   IonCard,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
-  IonList,
   IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
   IonFab,
   IonFabButton,
-  IonIcon, modalController
+  IonIcon,
+  IonList,
+  modalController
 } from "@ionic/vue";
-import {useAuthStore} from "@/stores/authStore";
 import dayjs from "dayjs";
-import number = CSS.number;
-import {add} from "ionicons/icons";
+import {add, eye, eyeOff} from "ionicons/icons";
 import IssueAddComment from "@/components/IssueAddComment.vue";
 import {useTtStore} from "@/stores/ttStore";
 
@@ -50,6 +48,7 @@ const openModal = async () => {
           <IonCardTitle>
             {{ comment.author }} add comment [#{{ (Number(index) + 1) }}]
             {{ dayjs(comment.created * 1000).format('DD.MM.YYYY HH:mm') }}
+            <IonIcon :icon="comment.private? eyeOff : eye"></IonIcon>
           </IonCardTitle>
         </IonCardHeader>
         <IonCardContent class="comment-body">
