@@ -1,6 +1,7 @@
 import {Camera, CameraResultType, CameraSource, Photo} from '@capacitor/camera';
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {Directory, Filesystem, WriteFileResult} from "@capacitor/filesystem";
+import {Preferences} from "@capacitor/preferences";
 
 export interface UserPhoto {
     filepath: string;
@@ -19,6 +20,7 @@ const convertBlobToBase64 = (blob: Blob) =>
 
 export const useAttachments = () => {
 
+    const PHOTO_STORAGE = 'photos'
     const photos = ref<any[]>([])
 
     const takePhoto = async (source?: CameraSource): Promise<Photo> => {
@@ -63,6 +65,18 @@ export const useAttachments = () => {
         return savedFile
     }
 
+    // const getSavedPhotos = async (photos: Photo[]): Promise<Photo[]> => {
+    //
+    // }
+
+    const cachePhotos = () => {
+        Preferences.set({
+            key: PHOTO_STORAGE,
+            value: JSON.stringify(photos.value),
+        });
+    };
+
+    watch(photos, cachePhotos);
 
     // const photos = ref<UserPhoto[]>([]);
     // const takePhoto = async () => {
