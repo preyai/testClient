@@ -12,7 +12,12 @@ export default defineConfig({
         vue(),
         legacy(),
         VitePWA({
-            registerType: 'autoUpdate',
+            strategies:'injectManifest',
+            srcDir: 'src',
+            filename: 'sw.ts',
+            injectManifest:{
+                swSrc: './src/sw.ts',
+            },
             manifest:{
                 theme_color:'#007bff',
                 background_color:'#FFFFFF',
@@ -73,7 +78,8 @@ export default defineConfig({
                 ],
             },
             devOptions: {
-                enabled: true
+                enabled: true,
+                type: 'module'
             }
         })
     ],
