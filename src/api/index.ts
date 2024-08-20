@@ -1,7 +1,7 @@
 import {useAuthStore} from "@/stores/authStore";
 
 
-const request = async (url: string, method?: string, body?: string) => {
+const request = async (url: string, method?: string, body?: any) => {
     const auth = useAuthStore()
 
     const SERVER_URL = import.meta.env.VITE_SERVER_URL
@@ -42,4 +42,4 @@ const put = async (url: string, params: object) => {
     return await request(url, 'PUT', JSON.stringify(params))
 }
 
-export default {get, post, put}
+export default {request, get, post, put}

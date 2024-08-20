@@ -1,11 +1,16 @@
 import {Camera, CameraResultType, CameraSource, Photo} from '@capacitor/camera';
-import {ref, watch} from "vue";
-import {Directory, Filesystem, WriteFileResult} from "@capacitor/filesystem";
-import {Preferences} from "@capacitor/preferences";
+import {ref} from "vue";
 
-export interface UserPhoto {
-    filepath: string;
-    webviewPath?: string;
+export interface PhotoData {
+    body: string;
+    date: number;
+    name: string;
+    size: number;
+    type: string
+}
+
+export interface UserPhoto extends Photo {
+    data?: PhotoData;
 }
 
 const convertBlobToBase64 = (blob: Blob) =>
@@ -18,99 +23,44 @@ const convertBlobToBase64 = (blob: Blob) =>
         reader.readAsDataURL(blob);
     });
 
+const blobToData = async (photo: Photo) => {
+    const date = Date.now();
+    const fileName = `${date}.${photo.format}`;
+    const response = await fetch(photo.webPath!);
+    const blob = await response.blob();
+    const base64Data = (await convertBlobToBase64(blob)) as string;
+
+    return {
+        body: base64Data.split(',')[1],
+        date,
+        name: fileName,
+        size: blob.size,
+        type: blob.type,
+    }
+}
+
 export const useAttachments = () => {
 
-    const PHOTO_STORAGE = 'photos'
     const photos = ref<any[]>([])
 
-    const takePhoto = async (source?: CameraSource): Promise<Photo> => {
+    const takePhoto = async (maxSize?: number, source?: CameraSource): Promise<UserPhoto> => {
+        const p = await Camera.checkPermissions()
+        console.log(p)
         const photo = await Camera.getPhoto({
             resultType: CameraResultType.Uri,
             source: source || CameraSource.Camera,
-            quality: 100,
+            quality: 50,
+            width: 500,
+            height: 500,
         });
 
-        console.log(photo)
+        const data = await blobToData(photo)
 
-        await savePhoto(photo)
-
-        return photo;
+        if (maxSize && data.size > maxSize)
+            return Promise.reject(new Error('size'))
+        else
+            return {...photo, ...{data}}
     }
-
-    const sendPhoto = async (photo: Photo): Promise<void> => {
-
-    }
-
-    const savePhoto = async (photo: Photo): Promise<WriteFileResult> => {
-        const fileName = `${Date.now()}.${photo.format}`;
-        const response = await fetch(photo.webPath!);
-        const blob = await response.blob();
-        console.log(blob)
-        const base64Data = (await convertBlobToBase64(blob)) as string;
-
-        const savedFile = await Filesystem.writeFile({
-            path: fileName,
-            data: base64Data,
-            directory: Directory.Data,
-        });
-
-        console.log(savedFile)
-
-        const f = await Filesystem.readFile({
-            path: savedFile.uri,
-        })
-
-        console.log(f)
-
-        return savedFile
-    }
-
-    // const getSavedPhotos = async (photos: Photo[]): Promise<Photo[]> => {
-    //
-    // }
-
-    const cachePhotos = () => {
-        Preferences.set({
-            key: PHOTO_STORAGE,
-            value: JSON.stringify(photos.value),
-        });
-    };
-
-    watch(photos, cachePhotos);
-
-    // const photos = ref<UserPhoto[]>([]);
-    // const takePhoto = async () => {
-    //     const photo = await Camera.getPhoto({
-    //         resultType: CameraResultType.Uri,
-    //         source: CameraSource.Camera,
-    //         quality: 100,
-    //     });
-    //
-    //     const fileName = Date.now() + '.jpeg';
-    //     const savedFileImage = await savePicture(photo, fileName);
-    //
-    //     photos.value = [savedFileImage, ...photos.value];
-    // };
-    //
-    // const savePicture = async (photo: Photo, fileName: string): Promise<UserPhoto> => {
-    //     // Fetch the photo, read as a blob, then convert to base64 format
-    //     const response = await fetch(photo.webPath!);
-    //     const blob = await response.blob();
-    //     const base64Data = (await convertBlobToBase64(blob)) as string;
-    //
-    //     const savedFile = await Filesystem.writeFile({
-    //         path: fileName,
-    //         data: base64Data,
-    //         directory: Directory.Documents,
-    //     });
-    //
-    //     // Use webPath to display the new image instead of base64 since it's
-    //     // already loaded into memory
-    //     return {
-    //         filepath: fileName,
-    //         webviewPath: photo.webPath,
-    //     };
-    // };
 
     return {
         photos,

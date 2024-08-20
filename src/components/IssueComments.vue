@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {IssueData} from "@/types/tt";
 import {
+  IonItem,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -41,22 +42,18 @@ const openModal = async () => {
 
 <template>
 
-  <IonList>
-    <IonItem v-for="(comment, index) of issue.issue.comments" :key="index">
-      <IonCard>
-        <IonCardHeader>
-          <IonCardTitle>
-            {{ comment.author }} add comment [#{{ (Number(index) + 1) }}]
-            {{ dayjs(comment.created * 1000).format('DD.MM.YYYY HH:mm') }}
-            <IonIcon :icon="comment.private? eyeOff : eye"></IonIcon>
-          </IonCardTitle>
-        </IonCardHeader>
-        <IonCardContent class="comment-body">
-          {{ comment.body }}
-        </IonCardContent>
-      </IonCard>
-    </IonItem>
-  </IonList>
+  <IonCard v-for="(comment, index) of issue.issue.comments" :key="index">
+    <IonCardHeader>
+      <IonCardTitle>
+        {{ comment.author }} add comment [#{{ (Number(index) + 1) }}]
+        {{ dayjs(comment.created * 1000).format('DD.MM.YYYY HH:mm') }}
+        <IonIcon :icon="comment.private? eyeOff : eye"></IonIcon>
+      </IonCardTitle>
+    </IonCardHeader>
+    <IonCardContent class="comment-body">
+      {{ comment.body }}
+    </IonCardContent>
+  </IonCard>
   <IonFab slot="fixed" vertical="bottom" horizontal="end">
     <IonFabButton @click="openModal">
       <IonIcon :icon="add"></IonIcon>

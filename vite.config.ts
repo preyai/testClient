@@ -15,9 +15,9 @@ export default defineConfig({
             strategies:'injectManifest',
             srcDir: 'src',
             filename: 'sw.ts',
-            injectManifest:{
-                swSrc: './src/sw.ts',
-            },
+            // injectManifest:{
+            //     swSrc: './src/sw.ts',
+            // },
             manifest:{
                 theme_color:'#007bff',
                 background_color:'#FFFFFF',
@@ -57,25 +57,6 @@ export default defineConfig({
                         sizes: '828x1792'
                     }
                 ]
-            },
-            workbox: {
-                globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
-                runtimeCaching: [
-                    {
-                        urlPattern: ({ url }) => url.origin === 'https://preyai.ddns.net',
-                        handler: 'NetworkFirst',
-                        options: {
-                            cacheName: 'api-cache',
-                            expiration: {
-                                maxEntries: 50,
-                                maxAgeSeconds: 60 * 60 * 24, // 1 день
-                            },
-                            cacheableResponse: {
-                                statuses: [0, 200],
-                            },
-                        },
-                    },
-                ],
             },
             devOptions: {
                 enabled: true,

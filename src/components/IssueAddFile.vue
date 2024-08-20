@@ -7,30 +7,39 @@ import {
   IonButton,
   IonTitle,
   IonContent,
+  IonImg,
   IonItem,
   IonTextarea,
   IonCheckbox
 } from "@ionic/vue";
 import {ref} from "vue";
 import {useTtStore} from "@/stores/ttStore";
-import {useAttachments} from "@/hooks/useAttachments";
-import {CameraSource} from "@capacitor/camera";
+import {useAttachments, UserPhoto} from "@/hooks/useAttachments";
+import {CameraSource, Photo} from "@capacitor/camera";
 
 const tt = useTtStore()
 const {takePhoto} = useAttachments()
-const comment = ref<string>("");
-const commentPrivate = ref(true);
+const photo = ref<UserPhoto>();
 
 const cancel = () => modalController.dismiss(null, 'cancel');
+
 const confirm = () => {
-  tt.addComment(comment.value, commentPrivate.value)
-      .then(() =>
-          modalController.dismiss(null, 'confirm')
-      )
+  if (photo.value)
+
+    tt.addAttachment(photo.value.data)
+        .then(() =>
+            modalController.dismiss(null, 'confirm')
+        )
+        .catch(e => alert(e))
 }
 
-const handler = () => {
-  takePhoto(CameraSource.Photos);
+const handlerCamera = () => {
+  takePhoto(tt.project?.maxFileSize, CameraSource.Camera)
+      .then(res => photo.value = res)
+}
+const handlerGallery = () => {
+  takePhoto(tt.project?.maxFileSize, CameraSource.Photos)
+      .then(res => photo.value = res)
 }
 
 </script>
@@ -48,7 +57,10 @@ const handler = () => {
     </IonToolbar>
   </IonHeader>
   <IonContent class="ion-padding">
-    <IonButton @click="handler">123</IonButton>
+    <IonImg :src="photo?.webPath"/>
+    <IonButton expand="block" @click="handlerCamera">Камера</IonButton>
+    <IonButton expand="block" @click="handlerGallery">Галерея</IonButton>
+
   </IonContent>
 </template>
 

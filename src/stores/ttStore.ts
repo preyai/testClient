@@ -63,8 +63,9 @@ export const useTtStore = defineStore('tt', () => {
         return api.post('tt/comment', {issueId: issue.value?.issue.issueId, comment, commentPrivate})
     }
 
-    const addAttachment = () => {
+    const addAttachment = (attachment: any) => {
 
+        return api.post('tt/file',  {issueId: issue.value?.issue.issueId, attachments: [attachment]})
     }
 
     // getters
@@ -85,6 +86,7 @@ export const useTtStore = defineStore('tt', () => {
         getIssues,
         getIssue,
         addComment,
+        addAttachment,
         ...getters
     }
 })

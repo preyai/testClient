@@ -4,6 +4,7 @@ import useStorage from "@/hooks/useStorage";
 import api from "@/api";
 import {useRouter} from "vue-router";
 
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 export const useAuthStore = defineStore('auth', () => {
     // Состояние
@@ -22,7 +23,7 @@ export const useAuthStore = defineStore('auth', () => {
         did?: string
     }) {
         // const storage = await getStorage();
-        const response = await fetch('https://preyai.ddns.net/frontend/authentication/login', {
+        const response = await fetch(`${SERVER_URL}/authentication/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -22,6 +22,7 @@ const password = ref("")
 const handler = () => {
   console.log("wtf")
   authStore.login({login: username.value, password: password.value, rememberMe: true})
+      .catch(e => alert(e))
 }
 
 watch(() => authStore.isAuthenticated, () => {
@@ -44,7 +45,7 @@ watch(() => authStore.isAuthenticated, () => {
 
         <IonInput label="password" label-placement="floating" type="password" v-model="password"/>
 
-        <IonButton type="submit" size="default" expand="block" >Войти</IonButton>
+        <IonButton type="submit" size="default" expand="block">Войти</IonButton>
       </form>
     </IonContent>
   </IonPage>

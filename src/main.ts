@@ -37,8 +37,11 @@ import './theme/variables.css';
 /* other */
 import {createPinia} from "pinia";
 import storage from "@/plugins/storage";
+import {defineCustomElements} from '@ionic/pwa-elements/loader';
 
 const pinia = createPinia();
+
+defineCustomElements(window);
 
 const app = createApp(App)
     .use(IonicVue)
