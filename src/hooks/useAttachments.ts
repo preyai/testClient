@@ -44,8 +44,8 @@ export const useAttachments = () => {
     const photos = ref<any[]>([])
 
     const takePhoto = async (maxSize?: number, source?: CameraSource): Promise<UserPhoto> => {
-        const p = await Camera.checkPermissions()
-        console.log(p)
+        // const p = await Camera.checkPermissions()
+        // console.log(p)
         const photo = await Camera.getPhoto({
             resultType: CameraResultType.Uri,
             source: source || CameraSource.Camera,
