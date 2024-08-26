@@ -9,7 +9,8 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  useIonRouter
+  useIonRouter,
+  IonCheckbox
 } from '@ionic/vue';
 import {ref, watch} from "vue";
 import {useAuthStore} from "@/stores/authStore";
@@ -18,15 +19,14 @@ const authStore = useAuthStore()
 const {push} = useIonRouter()
 const username = ref("")
 const password = ref("")
+const rememberMe = ref(false)
 
 const handler = () => {
-  console.log("wtf")
-  authStore.login({login: username.value, password: password.value, rememberMe: true})
+  authStore.login({login: username.value, password: password.value, rememberMe: rememberMe.value.value})
       .catch(e => alert(e))
 }
 
 watch(() => authStore.isAuthenticated, () => {
-  console.log("123")
   push('/addresses')
 })
 
@@ -40,10 +40,12 @@ watch(() => authStore.isAuthenticated, () => {
       </IonToolbar>
     </IonHeader>
     <IonContent c class="ion-padding">
-      <form @submit.prevent="handler">
+      <form @submit.prevent="handler" class="">
         <IonInput label="username" label-placement="floating" v-model="username"/>
 
         <IonInput label="password" label-placement="floating" type="password" v-model="password"/>
+
+        <IonCheckbox v-model="rememberMe" labelPlacement="end" class="ion-padding-vertical">Remember me</IonCheckbox>
 
         <IonButton type="submit" size="default" expand="block">Войти</IonButton>
       </form>
@@ -51,4 +53,11 @@ watch(() => authStore.isAuthenticated, () => {
   </IonPage>
 </template>
 
-<style scoped></style>
+<style scoped>
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+</style>

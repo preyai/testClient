@@ -1,8 +1,8 @@
 import {defineStore} from 'pinia';
 import {computed, ref} from 'vue';
-import useStorage from "@/hooks/useStorage";
 import api from "@/api";
 import {useRouter} from "vue-router";
+import {Preferences} from "@capacitor/preferences";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
@@ -11,7 +11,7 @@ export const useAuthStore = defineStore('auth', () => {
     const isAuthenticated = ref(false);
     const user = ref<string | null>(null);
     const token = ref<string | null>(null);
-    const storage = useStorage()
+    const did = ref<string | null>(null);
     const router = useRouter()
 
     // Действия
@@ -19,8 +19,6 @@ export const useAuthStore = defineStore('auth', () => {
         login: string;
         password: string;
         rememberMe?: boolean;
-        ua?: string;
-        did?: string
     }) {
         // const storage = await getStorage();
         const response = await fetch(`${SERVER_URL}/authentication/login`, {
@@ -28,7 +26,7 @@ export const useAuthStore = defineStore('auth', () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(credentials),
+            body: JSON.stringify({...credentials, ...{did: did.value}}),
         });
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -36,12 +34,18 @@ export const useAuthStore = defineStore('auth', () => {
         const data = await response.json();
         const {token: fetchedToken} = data;
 
-        isAuthenticated.value = true;
         user.value = credentials.login;
         token.value = fetchedToken;
+        isAuthenticated.value = true;
 
-        await storage.set('user', credentials);
-        await storage.set('token', fetchedToken);
+        await Preferences.set({
+            key: 'user',
+            value: credentials.login,
+        });
+        await Preferences.set({
+            key: 'token',
+            value: fetchedToken,
+        });
         return true
     }
 
@@ -50,18 +54,26 @@ export const useAuthStore = defineStore('auth', () => {
         user.value = null;
         token.value = null;
 
-        await storage.remove('user');
-        await storage.remove('token');
+        await Preferences.remove({key: 'user'});
+        await Preferences.remove({key: 'token'});
 
         await router.replace('/login')
     }
 
     async function loadAuthState() {
-        const storedUser = await storage.get('user');
-        const storedToken = await storage.get('token');
+        const storedUser = await Preferences.get({key: 'user'});
+        const storedToken = await Preferences.get({key: 'token'});
+        const storedDid = await Preferences.get({key: 'did'});
 
-        user.value = storedUser || null;
-        token.value = storedToken || null;
+        if (!storedDid.value) {
+            const uid = crypto.randomUUID();
+            await Preferences.set({key: 'did', value: uid});
+            did.value = uid;
+        }
+
+        user.value = storedUser.value || null;
+        token.value = storedToken.value || null;
+        did.value = storedDid.value || null;
 
         if (storedToken) {
             isAuthenticated.value = true
