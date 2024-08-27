@@ -16,6 +16,7 @@ import IssuesPage from "@/views/IssuesPage.vue";
 import FiltersPage from "@/views/FiltersPage.vue";
 import ProjectsPage from "@/views/ProjectsPage.vue";
 import IssuePage from "@/views/IssuePage.vue";
+import {useTtStore} from "@/stores/ttStore";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -116,6 +117,10 @@ router.beforeEach(async (to) => {
         return '/login'
     if (to.path === '/')
         return '/addresses'
+
+    const ttStore = useTtStore()
+    if (to.path.startsWith('/tt') && !ttStore.meta)
+        await ttStore.load()
 })
 
 export default router

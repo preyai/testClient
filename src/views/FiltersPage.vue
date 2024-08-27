@@ -11,12 +11,13 @@ const ttStore = useTtStore()
 const filters = computed(() => ttStore.project?.filters)
 
 const handler = async (filter: string) => {
-  ttStore.setFilter(filter)
-  await nextTick()
-  await router.push('/tt/issues')
+  await router.push(`/tt/issues?projectId=${ttStore.project?.projectId}&filter=${filter}`)
 }
 
 onMounted(() => {
+  const projectId = router.currentRoute.value.query['projectId']
+  if (projectId)
+    ttStore.setProject(ttStore.meta?.projects.find(project => project.projectId === Number(projectId)))
   if (!filters.value)
     router.replace('/tt')
 })
@@ -31,7 +32,7 @@ onMounted(() => {
     <IonContent>
       <IonList v-if="filters">
         <IonItem v-for="filter in filters" :key="filter.projectFilterId" @click="handler(filter.filter)">
-          <IonLabel>{{ ttStore.meta?.filters[filter.filter] }}</IonLabel>
+          <IonLabel>{{ ttStore.meta?.filters[filter.filter] || filter.filter }}</IonLabel>
         </IonItem>
       </IonList>
     </IonContent>

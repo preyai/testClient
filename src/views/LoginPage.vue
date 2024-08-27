@@ -22,7 +22,7 @@ const password = ref("")
 const rememberMe = ref(false)
 
 const handler = () => {
-  authStore.login({login: username.value, password: password.value, rememberMe: rememberMe.value.value})
+  authStore.login({login: username.value, password: password.value, rememberMe: rememberMe.value})
       .catch(e => alert(e))
 }
 

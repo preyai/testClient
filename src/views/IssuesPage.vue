@@ -37,12 +37,18 @@ const load = (event?: InfiniteScrollCustomEvent) => {
 }
 
 const handler = async (issue: Issue) => {
-  tt.setIssue(issue.issueId)
-  await nextTick()
-  await router.push('/tt/issue')
+  await router.push(`/tt/issue?issueId=${issue.issueId}`)
 }
 
-onMounted(load)
+onMounted(() => {
+  const projectId = router.currentRoute.value.query['projectId']?.toString()
+  const filter = router.currentRoute.value.query['filter']?.toString()
+  if (projectId && filter) {
+    tt.setProject(tt.meta?.projects.find(project => project.projectId === Number(projectId)))
+    tt.setFilter(filter)
+  }
+  load()
+})
 </script>
 
 <template>
@@ -54,7 +60,7 @@ onMounted(load)
     <IonContent>
       <IonList v-if="issues">
         <IonItem v-for="issue of issues" :key="issue.id" @click="handler(issue)" button>
-          <IonLabel>{{issue.issueId}} - {{ issue.subject }}</IonLabel>
+          <IonLabel>{{ issue.issueId }} - {{ issue.subject }}</IonLabel>
         </IonItem>
       </IonList>
       <IonInfiniteScroll v-if="skip < count" @ionInfinite="load">

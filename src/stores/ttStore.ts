@@ -76,8 +76,6 @@ export const useTtStore = defineStore('tt', () => {
         issue: computed(() => issue.value),
     }
 
-    onMounted(load)
-
     return {
         load,
         setProject,

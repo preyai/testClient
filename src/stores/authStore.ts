@@ -20,7 +20,6 @@ export const useAuthStore = defineStore('auth', () => {
         password: string;
         rememberMe?: boolean;
     }) {
-        // const storage = await getStorage();
         const response = await fetch(`${SERVER_URL}/authentication/login`, {
             method: 'POST',
             headers: {
@@ -75,7 +74,7 @@ export const useAuthStore = defineStore('auth', () => {
         token.value = storedToken.value || null;
         did.value = storedDid.value || null;
 
-        if (storedToken) {
+        if (storedToken.value) {
             isAuthenticated.value = true
             api.post('server/ping')
                 .catch(error => {

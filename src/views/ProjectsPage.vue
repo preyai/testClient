@@ -20,14 +20,12 @@ const router = useRouter()
 const ttStore = useTtStore()
 
 const handler = async (project: Project) => {
-  ttStore.setProject(project)
-  await nextTick()
-  await router.push('/tt/filters')
+  await router.push(`/tt/filters?projectId=${project.projectId}`)
 }
 
 const handleRefresh = (event: RefresherCustomEvent) => {
   ttStore.load()
-      .then(()=>event.target.complete())
+      .then(() => event.target.complete())
 
 };
 
