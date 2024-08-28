@@ -28,9 +28,14 @@ export const useTtStore = defineStore('tt', () => {
         filter.value = value
     }
 
-    const setIssue = (issueId: string) => {
-        getIssue(issueId)
-            .then(res => issue.value = res)
+    const setIssue = async (issueId: string) => {
+        const res = await getIssue(issueId);
+        issue.value = res;
+        if (!project.value) {
+            const _project = meta.value?.projects.find(project => project.acronym === res.issue.project)
+            if (_project)
+                setProject(_project);
+        }
     }
 
     const getIssues = async (limit: number, skip: number): Promise<DataStructure> => {
@@ -65,7 +70,7 @@ export const useTtStore = defineStore('tt', () => {
 
     const addAttachment = (attachment: any) => {
 
-        return api.post('tt/file',  {issueId: issue.value?.issue.issueId, attachments: [attachment]})
+        return api.post('tt/file', {issueId: issue.value?.issue.issueId, attachments: [attachment]})
     }
 
     // getters
