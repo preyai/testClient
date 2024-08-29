@@ -35,7 +35,7 @@ const openModal = async () => {
   const {role} = await modal.onWillDismiss();
 
   if (role === 'confirm' && tt.issue)
-    tt.setIssue(tt.issue.issue.issueId);
+    await tt.setIssue(tt.issue.issue.issueId);
 };
 
 </script>

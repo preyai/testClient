@@ -5,16 +5,30 @@ import {
   IonSelectOption,
   IonTextarea,
   IonInput,
+  IonCheckbox
 } from "@ionic/vue";
 import {useTtStore} from "@/stores/ttStore";
 
 const {field} = defineProps<{
-  field: string
+  field: string,
+  value: any
+}>()
+
+const emits = defineEmits<{
+  input: [value: any]
 }>()
 
 const tt = useTtStore()
 const type = ref<string>()
 const variants = ref<string[]>()
+
+const onInput = (event: Event) => {
+  emits('input', (event.target as HTMLInputElement).value);
+};
+
+const onChange = (event: Event) => {
+  emits('input', (event.target as HTMLInputElement).checked);
+};
 
 onMounted(() => {
   switch (field) {
@@ -52,12 +66,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <IonInput v-if="type==='text'" :label="field"/>
-  <IonTextarea v-if="type==='area'" :label="field"/>
-  <IonSelect v-if="type==='select'" :label="field">
-<!--    <IonSelectOption>1</IonSelectOption>-->
-<!--    <IonSelectOption>2</IonSelectOption>-->
-<!--    <IonSelectOption>3</IonSelectOption>-->
+  <IonInput v-if="type==='text'" :label="field" label-placement="floating" :value="value" @input="onInput"/>
+  <IonTextarea v-if="type==='area'" :label="field" label-placement="floating" :value="value" @input="onInput"/>
+  <IonCheckbox v-if="type==='checkbox'" label-placement="stacked" alignment="start" :checked="value" @ionChange="onChange">{{
+      field
+    }}
+  </IonCheckbox>
+  <IonSelect v-if="type==='select'" :label="field" label-placement="floating" :value="value" @ionChange="onInput">
     <IonSelectOption v-for="variant in variants" :value="variant" :key="variant">{{ variant }}</IonSelectOption>
   </IonSelect>
 
