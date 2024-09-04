@@ -23,16 +23,7 @@ const tt = useTtStore()
 const actions = useActions()
 const data = computed(() => tt.issue)
 const buttons = computed<ActionSheetButton[]>(() =>
-    Object.values(data.value?.actions || {}).map(i => {
-      if (i === "-") {
-        // Создаем объект разделителя
-        return {role: 'separator', disabled: true};
-      }
-      return {
-        text: i,
-        handler: () => actions.initAction(i),
-      };
-    })
+    tt.issue ? actions.getButtons(tt.issue) : []
 );
 const isOpen = ref(false)
 const segment = ref('info')
@@ -59,13 +50,13 @@ onMounted(() => {
       <IonToolbar>
         <IonSegment v-model="segment">
           <IonSegmentButton value="info">
-            <IonLabel>Info</IonLabel>
+            <IonLabel>{{ $t('tt.info') }}</IonLabel>
           </IonSegmentButton>
           <IonSegmentButton value="attachments">
-            <IonLabel>Attachments</IonLabel>
+            <IonLabel>{{ $t('tt.attachments') }}</IonLabel>
           </IonSegmentButton>
           <IonSegmentButton value="comments">
-            <IonLabel>Comments</IonLabel>
+            <IonLabel>{{ $t('tt.comments') }}</IonLabel>
           </IonSegmentButton>
         </IonSegment>
       </IonToolbar>
@@ -77,7 +68,7 @@ onMounted(() => {
     </IonContent>
     <IonActionSheet
         :is-open="isOpen"
-        header="Actions"
+        :header="$t('tt.actions')"
         :buttons="buttons"
         @didDismiss="()=>isOpen = false"
     />

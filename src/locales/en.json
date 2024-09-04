@@ -1,0 +1,63 @@
+{
+  "base": {
+    "authorization": "Authorization",
+    "settings": "Settings",
+    "addresses": "Addresses",
+    "tt": "TT",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "authorization": {
+    "username": "Username",
+    "password": "Password",
+    "rememberMe": "Remember Me",
+    "login": "Sign In"
+  },
+  "settings": {
+    "account": "Account",
+    "realName": "Real Name",
+    "username": "Username",
+    "logout": "Sign Out",
+    "app": "App",
+    "locale": "Locale"
+  },
+  "addresses": {
+    "regions": "Regions",
+    "areas": "Areas",
+    "cities": "Cities",
+    "settlements": "Settlements",
+    "streets": "Streets",
+    "houses": "Houses"
+  },
+  "tt": {
+    "info": "Info",
+    "attachments": "Attachments",
+    "comments": "Comments",
+    "actions": "Actions",
+    "workflow": "Workflow",
+    "project": "Project",
+    "catalog": "Catalog",
+    "subject": "Subject",
+    "created": "Created",
+    "updated": "Updated",
+    "status": "Status",
+    "resolution": "Resolution",
+    "description": "Description",
+    "author": "Author",
+    "assigned": "Assigned",
+    "watchers": "Watchers",
+    "saAddComment": "Add comment",
+    "saAddFile": "Attach file(s)",
+    "saAddSingleFile": "Attach file",
+    "saAddSingleFileQuiet": "Attach file",
+    "saDelete": "Delete issue",
+    "saWatch": "Watch / Unwatch",
+    "saAssignToMe": "Assign to Me",
+    "saCoordinate": "Coordinate",
+    "comment": "Comment",
+    "commentPrivate": "For Employees Only",
+    "camera": "Camera",
+    "gallery": "Gallery"
+  }
+}

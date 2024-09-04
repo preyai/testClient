@@ -26,7 +26,7 @@ onUnmounted(() => {
 <template>
   <IonPage>
     <PageHeader
-        label="settlements"
+        :label="$t('addresses.settlements')"
         defaultHref="/addresses"
         search
     />

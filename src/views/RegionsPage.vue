@@ -26,7 +26,7 @@ onUnmounted(()=>{
 <template>
   <IonPage>
     <PageHeader
-        label="regions"
+        :label="$t('addresses.regions')"
         defaultHref="/addresses"
         search
     />

@@ -8,7 +8,7 @@ import {
   IonItem,
   IonLabel,
   IonList,
-  IonPage
+  IonPage, IonRefresher, IonRefresherContent, RefresherCustomEvent
 } from "@ionic/vue";
 import {nextTick, onMounted, ref} from "vue";
 import PageHeader from "@/components/PageHeader.vue";
@@ -19,26 +19,32 @@ import router from "@/router";
 const tt = useTtStore()
 const issues = ref<Issue[]>([])
 const count = ref<number>(0)
-const limit = ref<number>(5)
+const limit = ref<number>(10)
 const skip = ref<number>(0)
 
-const load = (event?: InfiniteScrollCustomEvent) => {
-  tt.getIssues(limit.value, skip.value)
-      .then((res) => {
-        issues.value = [...issues.value, ...res.issues]
-        count.value = res.count
-        limit.value = Number(res.limit)
-        skip.value = Number(res.skip) + limit.value
-        event?.target.complete()
-      })
-      .catch(() => {
-        router.replace('/tt')
-      })
+const load = async (event?: InfiniteScrollCustomEvent) => {
+  try {
+    const res = await tt.getIssues(limit.value, skip.value);
+    issues.value = Number(res.skip) === 0 ? res.issues : [...issues.value, ...res.issues]
+    count.value = res.count
+    limit.value = Number(res.limit)
+    skip.value = Number(res.skip) + limit.value
+    event?.target.complete()
+  } catch (e) {
+    await router.replace('/tt')
+  }
 }
 
 const handler = async (issue: Issue) => {
   await router.push(`/tt/issue?issueId=${issue.issueId}`)
 }
+
+const handleRefresh = (event: RefresherCustomEvent) => {
+  skip.value = 0
+  load()
+      .then(() => event.target.complete())
+
+};
 
 onMounted(() => {
   const projectId = router.currentRoute.value.query['projectId']?.toString()
@@ -58,6 +64,9 @@ onMounted(() => {
         defaultHref="/tt"
     />
     <IonContent>
+      <IonRefresher slot="fixed" @ionRefresh="handleRefresh($event)">
+        <IonRefresherContent/>
+      </IonRefresher>
       <IonList v-if="issues">
         <IonItem v-for="issue of issues" :key="issue.id" @click="handler(issue)" button>
           <IonLabel>{{ issue.issueId }} - {{ issue.subject }}</IonLabel>

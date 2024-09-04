@@ -64,5 +64,6 @@ const openModal = async () => {
 <style scoped>
 .comment-body {
   white-space: break-spaces;
+  font-size: 150%;
 }
 </style>

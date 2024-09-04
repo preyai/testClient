@@ -24,14 +24,14 @@ const handler = (name: string) => {
   <IonPage id="addresses">
     <IonHeader>
       <IonToolbar>
-        <IonTitle>addresses</IonTitle>
+        <IonTitle>{{ $t('base.addresses') }}</IonTitle>
       </IonToolbar>
     </IonHeader>
 
     <IonContent class="">
       <IonList lines="full">
         <IonItem v-for="view in views" :key="view" @click="handler(view)">
-          <IonLabel>{{ view }}</IonLabel>
+          <IonLabel>{{ $t(`addresses.${view}`) }}</IonLabel>
         </IonItem>
       </IonList>
     </IonContent>

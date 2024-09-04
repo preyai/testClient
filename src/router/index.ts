@@ -17,6 +17,7 @@ import FiltersPage from "@/views/FiltersPage.vue";
 import ProjectsPage from "@/views/ProjectsPage.vue";
 import IssuePage from "@/views/IssuePage.vue";
 import {useTtStore} from "@/stores/ttStore";
+import useSettingsStore from "@/stores/settingsStore";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -111,6 +112,10 @@ const router = createRouter({
 
 router.beforeEach(async (to) => {
     const authStore = useAuthStore();
+    const settingsStore = useSettingsStore();
+
+    if (!settingsStore.isInitialized)
+        await settingsStore.init()
     if (!authStore.isAuthenticated)
         await authStore.loadAuthState()
     if (to.name !== 'Login' && !authStore.isAuthenticated)

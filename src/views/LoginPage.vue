@@ -36,18 +36,20 @@ watch(() => authStore.isAuthenticated, () => {
   <IonPage>
     <IonHeader>
       <IonToolbar>
-        <IonTitle>login {{ authStore.isAuthenticated }}</IonTitle>
+        <IonTitle>{{ $t('base.authorization') }}</IonTitle>
       </IonToolbar>
     </IonHeader>
     <IonContent c class="ion-padding">
       <form @submit.prevent="handler" class="">
-        <IonInput label="username" label-placement="floating" v-model="username"/>
+        <IonInput :label="$t('authorization.username')" label-placement="floating" v-model="username"/>
 
-        <IonInput label="password" label-placement="floating" type="password" v-model="password"/>
+        <IonInput :label="$t('authorization.password')" label-placement="floating" type="password" v-model="password"/>
 
-        <IonCheckbox v-model="rememberMe" labelPlacement="end" class="ion-padding-vertical">Remember me</IonCheckbox>
+        <IonCheckbox v-model="rememberMe" labelPlacement="end" class="ion-padding-vertical">
+          {{ $t('authorization.rememberMe') }}
+        </IonCheckbox>
 
-        <IonButton type="submit" size="default" expand="block">Войти</IonButton>
+        <IonButton type="submit" size="default" expand="block">{{ $t('authorization.login') }}</IonButton>
       </form>
     </IonContent>
   </IonPage>

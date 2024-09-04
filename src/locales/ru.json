@@ -1,0 +1,63 @@
+{
+  "base": {
+    "authorization": "Авторизация",
+    "settings": "Настройки",
+    "addresses": "Адреса",
+    "tt": "ТТ",
+    "edit": "Редактировать",
+    "cancel": "Отмаена",
+    "confirm": "Сохранить"
+  },
+  "authorization": {
+    "username": "Логин",
+    "password": "Пароль",
+    "rememberMe": "Запомнить меня",
+    "login": "Войти"
+  },
+  "settings": {
+    "account": "Аккаунт",
+    "realName": "Полное имя",
+    "username": "Логин",
+    "logout": "Выйти",
+    "app": "Приложение",
+    "locale": "язык"
+  },
+  "addresses": {
+    "regions": "Регионы",
+    "areas": "Районы",
+    "cities": "Города",
+    "settlements": "Населенные пункты",
+    "streets": "Улицы",
+    "houses": "Дома"
+  },
+  "tt": {
+    "info": "Информация",
+    "attachments": "Вложения",
+    "comments": "Комментарии",
+    "actions": "Действия",
+    "workflow": "Файл",
+    "project": "Проект",
+    "catalog": "Каталог",
+    "subject": "Тема",
+    "created": "Дата создания",
+    "updated": "Дата обновления",
+    "status": "Статус",
+    "resolution": "Резолюция",
+    "description": "Описание",
+    "author": "Автор",
+    "assigned": "Назначенные",
+    "watchers": "Наблюдатели",
+    "saAddComment": "Добавить комментарий",
+    "saAddFile": "Приложить файл(ы)",
+    "saAddSingleFile": "Приложить файл",
+    "saAddSingleFileQuiet": "Приложить файл",
+    "saDelete": "Удалить задачу",
+    "saWatch": "Наблюдать / перестать наблюдать",
+    "saAssignToMe": "Забрать себе",
+    "saCoordinate": "Скоординировать",
+    "comment": "Комментарий",
+    "commentPrivate": "Только для сотрудников",
+    "camera": "Камера",
+    "gallery": "Галерея"
+  }
+}

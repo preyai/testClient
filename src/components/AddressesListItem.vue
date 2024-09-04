@@ -3,6 +3,7 @@
 import {apiItem} from "@/types/data";
 import {ActionSheetButton, actionSheetController, IonItem, IonLabel, useIonRouter} from "@ionic/vue";
 import {computed} from "vue";
+import {useI18n} from "vue-i18n";
 
 const {item, labelKey, nextLocations = []} = defineProps<{
   item: T,
@@ -15,11 +16,12 @@ const emit = defineEmits<{
 }>()
 
 const router = useIonRouter()
+const {t} = useI18n()
 
 const label = computed(() => item[labelKey])
 
 const buttons: ActionSheetButton[] = nextLocations.map((location) => ({
-  text: location,
+  text: t(`addresses.${location}`),
   handler() {
     emit('select', item)
     router.push(`/addresses/${location}`)
@@ -31,14 +33,14 @@ const presentActionSheet = async () => {
     header: item[labelKey],
     buttons: [
       {
-        text: 'Edit',
+        text: t('base.edit'),
         data: {
           action: 'edit',
         },
       },
       ...buttons,
       {
-        text: 'Cancel',
+        text: t('base.cancel'),
         role: 'cancel',
         data: {
           action: 'cancel',

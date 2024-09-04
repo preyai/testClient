@@ -11,7 +11,6 @@ import {
   RefresherCustomEvent
 } from "@ionic/vue";
 import {useTtStore} from "@/stores/ttStore";
-import {computed, nextTick} from "vue";
 import {Project} from "@/types/tt";
 import {useRouter} from "vue-router";
 import PageHeader from "@/components/PageHeader.vue";
@@ -26,7 +25,6 @@ const handler = async (project: Project) => {
 const handleRefresh = (event: RefresherCustomEvent) => {
   ttStore.load()
       .then(() => event.target.complete())
-
 };
 
 </script>
@@ -41,7 +39,6 @@ const handleRefresh = (event: RefresherCustomEvent) => {
       <IonRefresher slot="fixed" @ionRefresh="handleRefresh($event)">
         <IonRefresherContent/>
       </IonRefresher>
-
       <IonList v-if="ttStore.meta?.projects">
         <IonItem v-for="project in ttStore.meta.projects" :key="project.projectId" @click="handler(project)">
           <IonLabel>{{ project.project }}</IonLabel>

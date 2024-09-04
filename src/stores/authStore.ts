@@ -25,7 +25,7 @@ export const useAuthStore = defineStore('auth', () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({...credentials, ...{did: did.value}}),
+            body: JSON.stringify({...credentials, ...{did: did.value || ''}}),
         });
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -65,9 +65,13 @@ export const useAuthStore = defineStore('auth', () => {
         const storedDid = await Preferences.get({key: 'did'});
 
         if (!storedDid.value) {
-            const uid = crypto.randomUUID();
-            await Preferences.set({key: 'did', value: uid});
-            did.value = uid;
+            try {
+                const uid = crypto.randomUUID();
+                await Preferences.set({key: 'did', value: uid});
+                did.value = uid;
+            } catch (error) {
+                console.warn(error);
+            }
         }
 
         user.value = storedUser.value || null;

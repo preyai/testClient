@@ -26,7 +26,6 @@ import '@ionic/vue/css/display.css';
  * For more info, please see:
  * https://ionicframework.com/docs/theming/dark-mode
  */
-
 /* @import '@ionic/vue/css/palettes/dark.always.css'; */
 /* @import '@ionic/vue/css/palettes/dark.class.css'; */
 import '@ionic/vue/css/palettes/dark.system.css';
@@ -36,8 +35,8 @@ import './theme/variables.css';
 
 /* other */
 import {createPinia} from "pinia";
-import storage from "@/plugins/storage";
 import {defineCustomElements} from '@ionic/pwa-elements/loader';
+import i18n from "@/i18n";
 
 const pinia = createPinia();
 
@@ -45,7 +44,7 @@ defineCustomElements(window);
 
 const app = createApp(App)
     .use(IonicVue)
-    .use(storage)
+    .use(i18n)
     .use(pinia)
     .use(router)
 

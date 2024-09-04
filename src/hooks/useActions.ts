@@ -1,8 +1,10 @@
 import {ComponentRef} from "@ionic/core"
-import {modalController} from "@ionic/vue";
+import {ActionSheetButton, modalController} from "@ionic/vue";
 import IssueAddComment from "@/components/IssueAddComment.vue";
 import IssueAddFile from "@/components/IssueAddFile.vue";
 import IssueAction from "@/components/IssueAction.vue";
+import {IssueData} from "@/types/tt";
+import {useI18n} from "vue-i18n";
 
 const specialActions = [
     "saAddComment",
@@ -18,6 +20,35 @@ const specialActions = [
 ]
 
 export const useActions = () => {
+
+    const {t} = useI18n(
+
+    )
+    const getActionLabel = (action: string) => {
+        let text: string;
+        if (action.at(0) === '!')
+            text = action.slice(1);
+        else
+            text = action
+
+        if (specialActions.includes(text))
+            return t(`tt.${text}`);
+        else
+            return text
+    }
+
+    const getButtons = (issue: IssueData): ActionSheetButton[] => {
+        return Object.values(issue.actions || {}).map(i => {
+            if (i === "-") {
+                // Создаем объект разделителя
+                return {role: 'separator', disabled: true};
+            }
+            return {
+                text: getActionLabel(i),
+                handler: () => initAction(i),
+            };
+        })
+    }
 
     const initAction = (_name: string) => {
         let name = _name
@@ -47,6 +78,8 @@ export const useActions = () => {
     }
 
     return {
+        getActionLabel,
+        getButtons,
         initAction
     }
 }

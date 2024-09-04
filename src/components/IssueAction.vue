@@ -16,8 +16,8 @@ const tt = useTtStore()
 const fields = ref<Record<string, any>>({});
 
 const cancel = () => modalController.dismiss(null, 'cancel');
+
 const confirm = () => {
-  console.log(fields.value)
   api.put(`tt/action/${tt.issue?.issue.issueId}`, {
     action: name,
     set: fields.value
@@ -29,7 +29,8 @@ const confirm = () => {
       })
 }
 
-onMounted(() => {
+onMounted(
+    () => {
   if (!tt.issue) return;
 
   api.get('tt/action', {
@@ -60,11 +61,11 @@ onMounted(() => {
   <IonHeader>
     <IonToolbar>
       <IonButtons slot="start">
-        <IonButton color="medium" @click="cancel">Cancel</IonButton>
+        <IonButton color="medium" @click="cancel">{{ $t('base.cancel') }}</IonButton>
       </IonButtons>
       <IonTitle>{{ name }}</IonTitle>
       <IonButtons slot="end">
-        <IonButton @click="confirm" :strong="true">Confirm</IonButton>
+        <IonButton @click="confirm" :strong="true">{{ $t('base.confirm') }}</IonButton>
       </IonButtons>
     </IonToolbar>
   </IonHeader>

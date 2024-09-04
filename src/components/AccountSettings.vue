@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {IonButton, IonCard, IonInput} from "@ionic/vue";
+import {IonButton, IonCard, IonInput, IonCardHeader, IonCardTitle} from "@ionic/vue";
 import {useAuthStore} from "@/stores/authStore";
 import {onMounted, ref} from "vue";
 import api from "@/api";
@@ -26,11 +26,11 @@ onMounted(() => {
 
 <template>
   <IonCard class="ion-padding grid">
+    <IonCardTitle>{{ $t('settings.account') }}</IonCardTitle>
+    <IonInput :label="$t('settings.username')" label-placement="floating" disabled :value="user?.login"/>
+    <IonInput :label="$t('settings.realName')" label-placement="floating" :value="user?.realName"/>
 
-    <IonInput label="username" label-placement="floating" disabled :value="user?.login"/>
-    <IonInput label="realName" label-placement="floating" :value="user?.realName"/>
-
-    <IonButton size="default" expand="block" @click="authStore.logout">Logout</IonButton>
+    <IonButton size="default" expand="block" @click="authStore.logout">{{ $t('settings.logout') }}</IonButton>
   </IonCard>
 
 </template>
