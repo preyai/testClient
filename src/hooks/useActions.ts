@@ -5,6 +5,8 @@ import IssueAddFile from "@/components/IssueAddFile.vue";
 import IssueAction from "@/components/IssueAction.vue";
 import {IssueData} from "@/types/tt";
 import {useI18n} from "vue-i18n";
+import api from "@/api";
+import {useTtStore} from "@/stores/ttStore";
 
 const specialActions = [
     "saAddComment",
@@ -21,9 +23,9 @@ const specialActions = [
 
 export const useActions = () => {
 
-    const {t} = useI18n(
+    const {t} = useI18n()
+    const tt = useTtStore()
 
-    )
     const getActionLabel = (action: string) => {
         let text: string;
         if (action.at(0) === '!')
@@ -66,8 +68,11 @@ export const useActions = () => {
                 default:
                     console.log(name)
             }
+        else if (withoutAccept)
+            doAction(name)
+                .then(() => ({}))
         else
-            openModal(IssueAction, {name, withoutAccept})
+            openModal(IssueAction, {name})
     }
 
     const openModal = (component: ComponentRef, props?: any) => {
@@ -77,9 +82,19 @@ export const useActions = () => {
         }).then(modal => modal.present())
     }
 
+    const doAction = async (action: string, set?: any) => {
+        await api.put(`tt/action/${tt.issue?.issue.issueId}`, {
+            action,
+            set
+        });
+        if (tt.issue)
+            return tt.setIssue(tt.issue.issue.issueId)
+    }
+
     return {
         getActionLabel,
         getButtons,
+        doAction,
         initAction
     }
 }
