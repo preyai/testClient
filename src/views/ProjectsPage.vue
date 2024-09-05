@@ -40,7 +40,7 @@ const handleRefresh = (event: RefresherCustomEvent) => {
         <IonRefresherContent/>
       </IonRefresher>
       <IonList v-if="ttStore.meta?.projects">
-        <IonItem v-for="project in ttStore.meta.projects" :key="project.projectId" @click="handler(project)">
+        <IonItem v-for="project in ttStore.meta.projects" :key="project.projectId" @click="handler(project)" button>
           <IonLabel>{{ project.project }}</IonLabel>
         </IonItem>
       </IonList>

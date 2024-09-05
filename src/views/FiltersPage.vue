@@ -31,7 +31,7 @@ onMounted(() => {
     />
     <IonContent>
       <IonList v-if="filters">
-        <IonItem v-for="filter in filters" :key="filter.projectFilterId" @click="handler(filter.filter)">
+        <IonItem v-for="filter in filters" :key="filter.projectFilterId" @click="handler(filter.filter)" button>
           <IonLabel>{{ ttStore.meta?.filters[filter.filter] || filter.filter }}</IonLabel>
         </IonItem>
       </IonList>

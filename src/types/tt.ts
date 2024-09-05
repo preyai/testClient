@@ -93,7 +93,7 @@ interface Resolution {
     resolution: string;
 }
 
-interface CustomField {
+export interface CustomField {
     customFieldId: number;
     catalog: string;
     type: string;
@@ -197,6 +197,7 @@ export interface DetailIssue extends Issue {
     project: string;
     childrens: DataStructure;
     watchers: string[];
+
     [key: string]: any;
 }
 

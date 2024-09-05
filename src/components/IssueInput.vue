@@ -66,13 +66,36 @@ onMounted(() => {
 </script>
 
 <template>
-  <IonInput v-if="type==='text'" :label="field" label-placement="floating" :value="value" @input="onInput"/>
-  <IonTextarea v-if="type==='area'" :label="field" label-placement="floating" :value="value" @input="onInput"/>
-  <IonCheckbox v-if="type==='checkbox'" label-placement="stacked" alignment="start" :checked="value" @ionChange="onChange">{{
-      field
-    }}
+  <IonInput
+      v-if="type==='text'"
+      :label="$t(`tt.${field}`)"
+      label-placement="floating"
+      :value="value"
+      @input="onInput"
+  />
+  <IonTextarea
+      v-if="type==='area'"
+      :label="$t(`tt.${field}`)"
+      label-placement="floating"
+      :value="value"
+      @input="onInput"
+  />
+  <IonCheckbox
+      v-if="type==='checkbox'"
+      label-placement="stacked"
+      alignment="start"
+      :checked="value"
+      @ionChange="onChange"
+  >
+    {{ $t(`tt.${field}`) }}
   </IonCheckbox>
-  <IonSelect v-if="type==='select'" :label="field" label-placement="floating" :value="value" @ionChange="onInput">
+  <IonSelect
+      v-if="type==='select'"
+      :label="$t(`tt.${field}`)"
+      label-placement="floating"
+      :value="value"
+      @ionChange="onInput"
+  >
     <IonSelectOption v-for="variant in variants" :value="variant" :key="variant">{{ variant }}</IonSelectOption>
   </IonSelect>
 
