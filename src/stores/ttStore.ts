@@ -38,6 +38,11 @@ export const useTtStore = defineStore('tt', () => {
         }
     }
 
+    const updateIssue = async () => {
+        if (issue.value)
+            return setIssue(issue.value.issue.issueId)
+    }
+
     const getIssues = async (limit: number, skip: number): Promise<DataStructure> => {
         if (!project.value || !filter.value)
             return Promise.reject()
@@ -68,9 +73,21 @@ export const useTtStore = defineStore('tt', () => {
         return api.post('tt/comment', {issueId: issue.value?.issue.issueId, comment, commentPrivate})
     }
 
+    const editComment = (comment: string, commentPrivate: boolean, commentIndex: number) => {
+        return api.put('tt/comment', {issueId: issue.value?.issue.issueId, comment, commentPrivate, commentIndex})
+    }
+
     const addAttachment = (attachment: any) => {
 
         return api.post('tt/file', {issueId: issue.value?.issue.issueId, attachments: [attachment]})
+    }
+
+    const doAction = async (action: string, set?: any) => {
+        await api.put(`tt/action/${issue.value?.issue.issueId}`, {
+            action,
+            set
+        });
+        return updateIssue()
     }
 
     // getters
@@ -88,8 +105,11 @@ export const useTtStore = defineStore('tt', () => {
         setIssue,
         getIssues,
         getIssue,
+        updateIssue,
         addComment,
+        editComment,
         addAttachment,
+        doAction,
         ...getters
     }
 })

@@ -142,7 +142,7 @@ interface Print {
 }
 
 //
-interface Comment {
+export interface Comment {
     created: number;
     type: boolean;
     private: boolean;
@@ -166,7 +166,7 @@ interface UploadDate {
     };
 }
 
-interface Attachment {
+export interface Attachment {
     metadata: Metadata;
     filename: string;
     chunkSize: number;

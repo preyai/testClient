@@ -63,13 +63,14 @@ export const useActions = () => {
                     openModal(IssueAddComment)
                     break;
                 case "saAddFile":
+                case "ttSaAddSingleFile":
                     openModal(IssueAddFile)
                     break;
                 default:
                     console.log(name)
             }
         else if (withoutAccept)
-            doAction(name)
+            tt.doAction(name)
                 .then(() => ({}))
         else
             openModal(IssueAction, {name})
@@ -82,19 +83,10 @@ export const useActions = () => {
         }).then(modal => modal.present())
     }
 
-    const doAction = async (action: string, set?: any) => {
-        await api.put(`tt/action/${tt.issue?.issue.issueId}`, {
-            action,
-            set
-        });
-        if (tt.issue)
-            return tt.setIssue(tt.issue.issue.issueId)
-    }
 
     return {
         getActionLabel,
         getButtons,
-        doAction,
         initAction
     }
 }

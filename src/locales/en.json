@@ -58,6 +58,7 @@
     "comment": "Comment",
     "commentPrivate": "For Employees Only",
     "camera": "Camera",
-    "gallery": "Gallery"
+    "gallery": "Gallery",
+    "commented": "commented"
   }
 }

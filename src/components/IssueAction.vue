@@ -5,24 +5,20 @@ import {onMounted, ref} from "vue";
 import api from "@/api";
 import {useTtStore} from "@/stores/ttStore";
 import IssueInput from "@/components/IssueInput.vue";
-import {useActions} from "@/hooks/useActions";
 
 const {name} = defineProps<{
   name: string
 }>()
 
 const tt = useTtStore()
-const actions = useActions()
 
 const fields = ref<Record<string, any>>({});
 
 const cancel = () => modalController.dismiss(null, 'cancel');
 
 const confirm = () => {
-  actions.doAction(name)
-      .then(() => {
-        modalController.dismiss(null, 'confirm')
-      })
+  tt.doAction(name)
+      .then(() => modalController.dismiss(null, 'confirm'))
 }
 
 onMounted(

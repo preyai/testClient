@@ -42,4 +42,5 @@ const put = async (url: string, params: object) => {
     return await request(url, 'PUT', JSON.stringify(params))
 }
 
+
 export default {request, get, post, put}

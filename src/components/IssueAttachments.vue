@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import {IssueData} from "@/types/tt";
+import {Attachment, Comment, IssueData} from "@/types/tt";
 import {
+  alertController,
+  IonButton,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -18,6 +20,8 @@ import dayjs from "dayjs";
 import {add} from "ionicons/icons";
 import {useTtStore} from "@/stores/ttStore";
 import IssueAddFile from "@/components/IssueAddFile.vue";
+import {useI18n} from "vue-i18n";
+import api from "@/api";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
@@ -25,8 +29,19 @@ const {issue} = defineProps<{
   issue: IssueData
 }>()
 
-const {token} = useAuthStore()
+const {user, token} = useAuthStore()
 const tt = useTtStore()
+const {t} = useI18n()
+
+const getEditable = (attachment: Attachment) => {
+  if (!tt.meta)
+    return false;
+  if (tt.meta.myRoles[issue.issue.project] < 20)
+    return false;
+  if (tt.meta.statuses.find(s => s.status === issue.issue.status)?.final === 1)
+    return false;
+  return tt.meta.myRoles[issue.issue.project] >= 70 || attachment.attachman === user;
+}
 
 const openModal = async () => {
   const modal = await modalController.create({
@@ -37,10 +52,30 @@ const openModal = async () => {
 
   const {role} = await modal.onWillDismiss();
 
-  if (role === 'confirm' && tt.issue)
-    tt.setIssue(tt.issue.issue.issueId);
+  if (role === 'confirm')
+    await tt.updateIssue();
 };
-// const {photos, takePhoto} = useAttachments();
+
+const deleteHandler = async (attachment: Attachment) => {
+
+  const alert = await alertController.create({
+    header: t('tt.confirmation'),
+    message: `${t('tt.deleteFile')} "${attachment.filename}"?`,
+    buttons: [{
+      text: t('tt.delete'),
+      handler: async () => {
+        api.request(`tt/file`, 'DELETE', JSON.stringify({
+          issueId: issue.issue.issueId,
+          filename: attachment.filename,
+        })).then(() => tt.updateIssue())
+      }
+    }],
+  });
+
+  await alert.present();
+
+}
+
 </script>
 
 <template>
@@ -57,9 +92,14 @@ const openModal = async () => {
       <IonCardSubtitle>{{ img.filename }}</IonCardSubtitle>
 
     </IonCardHeader>
-    <IonCardContent>
-
-    </IonCardContent>
+    <IonButton
+        v-if="getEditable(img)"
+        fill="clear"
+        color="danger"
+        @click="deleteHandler(img)"
+    >
+      {{ $t('base.delete') }}
+    </IonButton>
   </IonCard>
   <IonFab slot="fixed" vertical="bottom" horizontal="end">
     <IonFabButton @click="openModal">
