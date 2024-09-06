@@ -113,6 +113,7 @@ const router = createRouter({
 router.beforeEach(async (to) => {
     const authStore = useAuthStore();
     const settingsStore = useSettingsStore();
+    const ttStore = useTtStore()
 
     if (!settingsStore.isInitialized)
         await settingsStore.init()
@@ -122,8 +123,6 @@ router.beforeEach(async (to) => {
         return '/login'
     if (to.path === '/')
         return '/addresses'
-
-    const ttStore = useTtStore()
     if (to.path.startsWith('/tt') && !ttStore.meta)
         await ttStore.load()
 })

@@ -1,19 +1,24 @@
 <script setup lang="ts">
 import {CustomField, DetailIssue} from "@/types/tt";
 import {IonItem, IonLabel, IonText} from "@ionic/vue";
+import {onMounted, ref} from "vue";
 
 const {issue, field} = defineProps<{ issue: DetailIssue, field: CustomField }>()
+const text = ref<string>()
 
-let text: string;
 
-switch (field.type) {
-  case "array":
-    text = Object.values(issue[`_cf_${field.field}`]).join(',')
-    break;
-  default:
-    text = issue[`_cf_${field.field}`]
-    break;
-}
+onMounted(() => {
+  const value = issue[`_cf_${field.field}`]
+  if (value)
+    switch (field.type) {
+      case "array":
+        text.value = Object.values(value).join(',')
+        break;
+      default:
+        text.value = value
+        break;
+    }
+})
 
 </script>
 

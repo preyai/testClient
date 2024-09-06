@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import {
-  ActionSheetButton,
+  ActionSheetButton, alertController,
   IonActionSheet,
   IonContent,
   IonLabel,
@@ -16,11 +16,13 @@ import {useTtStore} from "@/stores/ttStore";
 import IssueInfo from "@/components/IssueInfo.vue";
 import IssueAttachments from "@/components/IssueAttachments.vue";
 import IssueComments from "@/components/IssueComments.vue";
-import router from "@/router";
 import {useActions} from "@/hooks/useActions";
+import {useRoute, useRouter} from "vue-router";
 
 const tt = useTtStore()
 const actions = useActions()
+const router = useRouter()
+
 const data = computed(() => tt.issue)
 const buttons = computed<ActionSheetButton[]>(() =>
     tt.issue ? actions.getButtons(tt.issue) : []
@@ -36,6 +38,17 @@ onMounted(() => {
   const issueId = router.currentRoute.value.query['issueId']?.toString()
   if (issueId)
     tt.setIssue(issueId)
+        .catch(() => {
+          alertController.create({
+            header: 'Не удалось загрузить',
+            buttons: [{
+              text: 'Назад',
+              handler: () => {
+                router.go(-1)
+              }
+            }],
+          }).then(alert => alert.present())
+        })
 })
 </script>
 

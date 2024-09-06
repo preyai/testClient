@@ -3,6 +3,7 @@ import {computed, onMounted, ref} from "vue";
 import {DataStructure, IssueData, Meta, Project} from "@/types/tt";
 import api from "@/api";
 import {useAttachments} from "@/hooks/useAttachments";
+import {alertController} from "@ionic/vue";
 
 export const useTtStore = defineStore('tt', () => {
     // state
@@ -29,12 +30,17 @@ export const useTtStore = defineStore('tt', () => {
     }
 
     const setIssue = async (issueId: string) => {
-        const res = await getIssue(issueId);
-        issue.value = res;
-        if (!project.value) {
-            const _project = meta.value?.projects.find(project => project.acronym === res.issue.project)
-            if (_project)
-                setProject(_project);
+        try {
+            const res = await getIssue(issueId);
+            issue.value = res;
+            if (!project.value) {
+                const _project = meta.value?.projects.find(project => project.acronym === res.issue.project)
+                if (_project)
+                    setProject(_project);
+            }
+        } catch (e) {
+            issue.value = undefined
+            throw e
         }
     }
 
@@ -83,11 +89,21 @@ export const useTtStore = defineStore('tt', () => {
     }
 
     const doAction = async (action: string, set?: any) => {
-        await api.put(`tt/action/${issue.value?.issue.issueId}`, {
-            action,
-            set
-        });
-        return updateIssue()
+        try {
+            await api.put(`tt/action/${issue.value?.issue.issueId}`, {
+                action,
+                set
+            });
+            return updateIssue()
+        } catch (error: any) {
+            const alert = await alertController.create({
+                header: 'Не удалось выполнить действие',
+                message: error.message,
+                buttons: ['Ok'],
+            });
+
+            await alert.present();
+        }
     }
 
     // getters

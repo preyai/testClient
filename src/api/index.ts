@@ -1,30 +1,32 @@
 import {useAuthStore} from "@/stores/authStore";
+import {logger} from "workbox-core/_private";
 
 
 const request = async (url: string, method?: string, body?: any) => {
     const auth = useAuthStore()
 
-    const SERVER_URL = import.meta.env.VITE_SERVER_URL
+    try {
+        const SERVER_URL = import.meta.env.VITE_SERVER_URL
 
-    const headers = new Headers({
-        authorization: `Bearer ${auth.token}`
-    })
+        const headers = new Headers({
+            authorization: `Bearer ${auth.token}`
+        })
+        const res = await fetch(`${SERVER_URL}/${url}`, {
 
-    const response = await fetch(`${SERVER_URL}/${url}`, {
-
-        method: method,
-        headers,
-        body
-    })
-    const json = await response.json()
-    if (json && json.error && json.error === 'tokenNotFound') {
-        await useAuthStore().logout()
-        return json
+            method: method,
+            headers,
+            body
+        });
+        const data: any = await res.json();
+        if (data && data.error && data.error === 'tokenNotFound') {
+            return useAuthStore().logout()
+        }
+        return data
+    } catch (error) {
+        console.warn(error)
+        throw error
     }
-    if (!response.ok) {
-        throw new Error(response.status.toString())
-    }
-    return json
+
 }
 
 const get = async (url: string, params?: Record<string, string>) => {
