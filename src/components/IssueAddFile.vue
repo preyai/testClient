@@ -10,7 +10,7 @@ import {
   IonImg,
   IonItem,
   IonTextarea,
-  IonCheckbox
+  IonCheckbox, alertController
 } from "@ionic/vue";
 import {ref} from "vue";
 import {useTtStore} from "@/stores/ttStore";
@@ -30,7 +30,24 @@ const confirm = () => {
         .then(() =>
             modalController.dismiss(null, 'confirm')
         )
-        .catch(e => alert(e))
+        .catch(error => {
+          if (error.message === 'Failed to fetch')
+            alertController.create({
+              header: 'Нет сети',
+              message: 'Фото будет загружено при подключении к сети',
+              buttons: ['Ok'],
+            })
+                .then((alert) => alert.present())
+                .then(() => modalController.dismiss(null, 'confirm'))
+          else {
+            alertController.create({
+              header: 'Что то пошло не так',
+              message: error.message,
+              buttons: ['Ok'],
+            })
+                .then((alert) => alert.present())
+          }
+        })
 }
 
 const handlerCamera = () => {
@@ -48,18 +65,18 @@ const handlerGallery = () => {
   <IonHeader>
     <IonToolbar>
       <IonButtons slot="start">
-        <IonButton color="medium" @click="cancel">{{$t('base.cancel')}}</IonButton>
+        <IonButton color="medium" @click="cancel">{{ $t('base.cancel') }}</IonButton>
       </IonButtons>
-      <IonTitle>{{ $t('tt.saAddFile')}}</IonTitle>
+      <IonTitle>{{ $t('tt.saAddFile') }}</IonTitle>
       <IonButtons slot="end">
-        <IonButton @click="confirm" :strong="true">{{ $t('base.confirm')}}</IonButton>
+        <IonButton @click="confirm" :strong="true">{{ $t('base.confirm') }}</IonButton>
       </IonButtons>
     </IonToolbar>
   </IonHeader>
   <IonContent class="ion-padding">
     <IonImg :src="photo?.webPath"/>
     <IonButton expand="block" @click="handlerCamera">{{ $t('tt.camera') }}</IonButton>
-    <IonButton expand="block" @click="handlerGallery">{{$t('tt.gallery')}}</IonButton>
+    <IonButton expand="block" @click="handlerGallery">{{ $t('tt.gallery') }}</IonButton>
 
   </IonContent>
 </template>

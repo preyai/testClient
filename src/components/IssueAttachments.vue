@@ -40,7 +40,7 @@ const getEditable = (attachment: Attachment) => {
     return false;
   if (tt.meta.statuses.find(s => s.status === issue.issue.status)?.final === 1)
     return false;
-  return tt.meta.myRoles[issue.issue.project] >= 70 || attachment.attachman === user;
+  return tt.meta.myRoles[issue.issue.project] >= 70 || attachment.metadata.attachman === user;
 }
 
 const openModal = async () => {

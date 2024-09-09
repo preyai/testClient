@@ -9,7 +9,7 @@ import {
   IonContent,
   IonItem,
   IonTextarea,
-  IonCheckbox
+  IonCheckbox, alertController
 } from "@ionic/vue";
 import {ref} from "vue";
 import {useTtStore} from "@/stores/ttStore";
@@ -25,6 +25,24 @@ const confirm = () => {
       .then(() =>
           modalController.dismiss(null, 'confirm')
       )
+      .catch(error => {
+        if (error.message === 'Failed to fetch')
+          alertController.create({
+            header: 'Нет сети',
+            message: 'Комментарий будет загружен при подключении к сети',
+            buttons: ['Ok'],
+          })
+              .then((alert) => alert.present())
+              .then(() => modalController.dismiss(null, 'confirm'))
+        else {
+          alertController.create({
+            header: 'Что то пошло не так',
+            message: error.message,
+            buttons: ['Ok'],
+          })
+              .then((alert) => alert.present())
+        }
+      })
 }
 </script>
 
@@ -47,7 +65,7 @@ const confirm = () => {
     </IonItem>
     <IonItem>
       <IonCheckbox id="terms" v-model="commentPrivate">
-        <div class="ion-text-wrap">{{ $t('tt.commentPrivate')}}</div>
+        <div class="ion-text-wrap">{{ $t('tt.commentPrivate') }}</div>
       </IonCheckbox>
     </IonItem>
   </IonContent>
