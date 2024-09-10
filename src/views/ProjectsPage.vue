@@ -14,9 +14,11 @@ import {useTtStore} from "@/stores/ttStore";
 import {Project} from "@/types/tt";
 import {useRouter} from "vue-router";
 import PageHeader from "@/components/PageHeader.vue";
+import useIssueCreate from "@/hooks/useIssueCreate";
 
 const router = useRouter()
 const ttStore = useTtStore()
+const {openModal} = useIssueCreate()
 
 const handler = async (project: Project) => {
   await router.push(`/tt/filters?projectId=${project.projectId}`)
@@ -34,6 +36,8 @@ const handleRefresh = (event: RefresherCustomEvent) => {
     <PageHeader
         label="projects"
         defaultHref="/tt"
+        actions
+        @onActionsClick="openModal"
     />
     <IonContent>
       <IonRefresher slot="fixed" @ionRefresh="handleRefresh($event)">

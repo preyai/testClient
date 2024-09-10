@@ -55,7 +55,7 @@ interface Workflows {
     [key: string]: Workflow;
 }
 
-interface Workflow {
+export interface Workflow {
     name: string;
     catalog: Catalog;
 }

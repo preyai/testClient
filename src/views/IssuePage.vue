@@ -58,7 +58,7 @@ onMounted(() => {
         :label=" data?.issue.issueId ||'issue'"
         defaultHref="/tt"
         actions
-        @onClick="showActions"
+        @onActionsClick="showActions"
     >
       <IonToolbar>
         <IonSegment v-model="segment">

@@ -1,5 +1,5 @@
 import {ComponentRef} from "@ionic/core"
-import {ActionSheetButton, modalController} from "@ionic/vue";
+import {ActionSheetButton, alertController, modalController} from "@ionic/vue";
 import IssueAddComment from "@/components/IssueAddComment.vue";
 import IssueAddFile from "@/components/IssueAddFile.vue";
 import IssueAction from "@/components/IssueAction.vue";
@@ -71,7 +71,14 @@ export const useActions = () => {
             }
         else if (withoutAccept)
             tt.doAction(name)
-                .then(() => ({}))
+                .catch((error) => {
+                    alertController.create({
+                        header: 'Что то пошло не так',
+                        message: error.message,
+                        buttons: ['Ok'],
+                    })
+                        .then((alert) => alert.present())
+                })
         else
             openModal(IssueAction, {name})
     }

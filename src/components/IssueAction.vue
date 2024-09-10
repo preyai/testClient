@@ -1,6 +1,16 @@
 <script setup lang="ts">
 
-import {IonButton, IonButtons, IonContent, IonHeader, IonItem, IonTitle, IonToolbar, modalController} from "@ionic/vue";
+import {
+  alertController,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonItem,
+  IonTitle,
+  IonToolbar,
+  modalController
+} from "@ionic/vue";
 import {onMounted, ref} from "vue";
 import api from "@/api";
 import {useTtStore} from "@/stores/ttStore";
@@ -43,7 +53,14 @@ onMounted(
         // Преобразуем массив обратно в объект и сохраняем его в fields.value
         fields.value = Object.fromEntries(
             values.map((value) => [value, value === 'commentPrivate' ? true : '']))
-      });
+      }).catch((error) => {
+        alertController.create({
+          header: 'Что то пошло не так',
+          message: error.message,
+          buttons: ['Ok'],
+        })
+            .then((alert) => alert.present())
+      })
     });
 
 </script>

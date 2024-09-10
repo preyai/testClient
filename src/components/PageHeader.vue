@@ -21,7 +21,7 @@ const {label, search = false, defaultHref = '/'} = defineProps<{
 }>()
 const emit = defineEmits<{
   onSearch: [event: SearchbarCustomEvent],
-  onClick: [event: Event]
+  onActionsClick: [event: Event]
 }>()
 </script>
 
@@ -32,7 +32,7 @@ const emit = defineEmits<{
         <IonBackButton :defaultHref="defaultHref"/>
       </IonButtons>
       <IonButtons slot="end" v-if="actions">
-        <IonButton @click="emit('onClick', $event)">
+        <IonButton @click="emit('onActionsClick', $event)">
           <IonIcon slot="icon-only" :ios="ellipsisHorizontal" :md="ellipsisVertical"></IonIcon>
         </IonButton>
       </IonButtons>

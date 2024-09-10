@@ -12,6 +12,7 @@ export default defineConfig({
         vue(),
         legacy(),
         VitePWA({
+            registerType: 'autoUpdate',
             strategies:'injectManifest',
             srcDir: 'src',
             filename: 'sw.ts',

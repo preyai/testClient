@@ -1,7 +1,7 @@
 import {precacheAndRoute} from 'workbox-precaching'
 import {registerRoute} from 'workbox-routing';
 import {NetworkFirst, NetworkOnly} from 'workbox-strategies';
-import {BackgroundSyncPlugin, Queue, QueueStore, StorableRequest,} from 'workbox-background-sync';
+import {BackgroundSyncPlugin, Queue,} from 'workbox-background-sync';
 
 declare let self: ServiceWorkerGlobalScope
 precacheAndRoute(self.__WB_MANIFEST)
@@ -19,6 +19,7 @@ registerRoute(
 // Настройка BackgroundSyncPlugin
 const bgSyncPlugin = new BackgroundSyncPlugin('issueUploadQueue', {
     maxRetentionTime: 48 * 60, // Хранить запросы в течение 48 часов
+
 });
 
 // Регистрация маршрута для обработки запросов на загрузку фотографий

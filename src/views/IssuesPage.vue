@@ -15,8 +15,11 @@ import PageHeader from "@/components/PageHeader.vue";
 import {useTtStore} from "@/stores/ttStore";
 import {DataStructure, Issue} from "@/types/tt";
 import router from "@/router";
+import useIssueCreate from "@/hooks/useIssueCreate";
 
 const tt = useTtStore()
+const {openModal} = useIssueCreate()
+
 const issues = ref<Issue[]>([])
 const count = ref<number>(0)
 const limit = ref<number>(10)
@@ -62,6 +65,8 @@ onMounted(() => {
     <PageHeader
         label="issues"
         defaultHref="/tt"
+        actions
+        @onActionsClick="openModal"
     />
     <IonContent>
       <IonRefresher slot="fixed" @ionRefresh="handleRefresh($event)">

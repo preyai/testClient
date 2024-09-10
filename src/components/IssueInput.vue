@@ -45,8 +45,6 @@ onMounted(() => {
       variants.value = tt.project?.resolutions
           .map(id => tt.meta?.resolutions.find(resolution => resolution.resolutionId == id)?.resolution)
           .filter((resolution): resolution is string => resolution !== undefined);
-      console.log(tt)
-      console.log(variants.value)
       break;
     case "status":
     case "tags":

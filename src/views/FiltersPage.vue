@@ -5,9 +5,12 @@ import {computed, nextTick, onMounted} from "vue";
 import {useTtStore} from "@/stores/ttStore";
 import PageHeader from "@/components/PageHeader.vue";
 import {useRouter} from "vue-router";
+import useIssueCreate from "@/hooks/useIssueCreate";
 
 const router = useRouter()
 const ttStore = useTtStore()
+const {openModal} = useIssueCreate()
+
 const filters = computed(() => ttStore.project?.filters)
 
 const handler = async (filter: string) => {
@@ -28,6 +31,8 @@ onMounted(() => {
     <PageHeader
         label="filters"
         defaultHref="/tt"
+        actions
+        @onActionsClick="openModal"
     />
     <IonContent>
       <IonList v-if="filters">
