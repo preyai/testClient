@@ -137,14 +137,14 @@ watch(catalog, () => {
     >
     </IonInput>
 
-    <template v-for="(field,key) in fields" :key="key">
-      <component
-          :is="getComponentResult[key].component"
-          v-bind="getComponentResult[key].props"
-          v-model="models[key]"
-      >
-      </component>
-    </template>
+    <component
+        v-for="(field,key) in fields"
+        :key="key"
+        :is="getComponentResult[key].component"
+        v-bind="getComponentResult[key].props"
+        v-model="models[key]"
+    >
+    </component>
 
   </IonContent>
 </template>
