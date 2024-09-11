@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {
   IonSelect,
   IonSelectOption,
@@ -8,10 +8,13 @@ import {
   IonCheckbox
 } from "@ionic/vue";
 import {useTtStore} from "@/stores/ttStore";
+import {Project} from "@/types/tt";
+import useIssueInput from "@/hooks/useIssueInput";
 
-const {field} = defineProps<{
+const {field, value, _project} = defineProps<{
   field: string,
-  value: any
+  value: any,
+  _project?: Project
 }>()
 
 const emits = defineEmits<{
@@ -19,6 +22,7 @@ const emits = defineEmits<{
 }>()
 
 const tt = useTtStore()
+const project = computed(() => _project || tt.project)
 const type = ref<string>()
 const variants = ref<string[]>()
 
@@ -42,7 +46,7 @@ onMounted(() => {
       break
     case "resolution":
       type.value = 'select';
-      variants.value = tt.project?.resolutions
+      variants.value = project.value?.resolutions
           .map(id => tt.meta?.resolutions.find(resolution => resolution.resolutionId == id)?.resolution)
           .filter((resolution): resolution is string => resolution !== undefined);
       break;

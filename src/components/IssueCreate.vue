@@ -10,32 +10,79 @@ import {
   IonSelectOption,
   IonTitle,
   IonToolbar, modalController,
-  IonModal
+  IonInput
 } from "@ionic/vue";
-import IssueInput from "@/components/IssueInput.vue";
 import {useTtStore} from "@/stores/ttStore";
-import {ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {Project, Workflow} from "@/types/tt";
-import AutocompleteSelect from "@/components/AutocompleteSelect.vue";
+import IssueCatalogSelect from "@/components/IssueCatalogSelect.vue";
+import api from "@/api";
+import IssueInput from "@/components/IssueInput.vue";
+import useIssueInput from "@/hooks/useIssueInput";
+
+// Определяем тип для модели
+type Models = Record<string, string | number | boolean>;
 
 const tt = useTtStore()
+const u = useIssueInput()
 
 const project = ref(tt.project)
-const workflow = ref<Workflow>()
+const workflow = ref<string>()
 const catalog = ref<string>()
 
-const getWorkflowsByProject: Workflow[] = (project: Project) => project.workflows
-    .map(name => tt.meta?.workflows[name])
-    .filter(i => i !== undefined)
+const fields = ref()
+const models = ref<Models>({});
 
-const getCatalogsByWorkflow = (workflow: Workflow) => {
+const getComponentResult = computed(() => {
+  return Object.keys(fields.value).reduce<Record<string, {
+    component: any;
+    props: Record<string, any>;
+  }>>((acc: any, key) => {
+    const field = fields.value[key];
+    acc[key] = u.getComponent(field);
+    return acc;
+  }, {});
+});
 
+const openCatalogSelect = async (e: Event) => {
+  e.preventDefault()
+  if (!workflow.value)
+    return;
+  const modal = await modalController.create({
+    component: IssueCatalogSelect,
+    componentProps: {
+      workflow: tt.meta?.workflows[workflow.value],
+      selectedItem: catalog.value,
+    }
+  });
+
+  await modal.present();
+
+  const {data, role} = await modal.onWillDismiss();
+
+  if (role === 'confirm') {
+    catalog.value = data;
+  }
 }
 
 const h1 = () => {
 }
 const cancel = () => modalController.dismiss(null, 'cancel')
 
+watch(catalog, () => {
+  if (!workflow.value || !catalog.value)
+    return;
+  api.get('tt/issueTemplate', {
+    _id: workflow.value,
+    catalog: catalog.value,
+  })
+      .then(res => {
+        fields.value = res.template.fields;
+        Object.keys(fields.value).forEach(key => {
+          models.value[key] = ''; // Инициализируем пустой строкой или другим значением по умолчанию
+        });
+      })
+})
 </script>
 
 <template>
@@ -70,24 +117,35 @@ const cancel = () => modalController.dismiss(null, 'cancel')
         :label="$t(`tt.workflow`)"
         v-model="workflow"
     >
-      <IonSelectOption v-for="variant in project?.workflows" :value="tt.meta?.workflows[variant]" :key="variant">
+      <IonSelectOption
+          v-for="key in project?.workflows"
+          :value="key"
+          :key="key"
+      >
         {{
-          tt.meta?.workflows[variant].name
+          tt.meta?.workflows[key].name
         }}
       </IonSelectOption>
     </IonSelect>
 
-    <IonButton
+    <IonInput
+        readonly
         label-placement="floating"
         :label="$t(`tt.catalog`)"
         v-model="catalog"
-        id="sss"
+        @click="openCatalogSelect"
     >
-    </IonButton>
-    <IonModal v-if="project" trigger="sss">
-      <AutocompleteSelect title="sss" :selectedItem="workflow" searchableField="name"
-                          :items="getWorkflowsByProject(project)"/>
-    </IonModal>
+    </IonInput>
+
+    <template v-for="(field,key) in fields" :key="key">
+      <component
+          :is="getComponentResult[key].component"
+          v-bind="getComponentResult[key].props"
+          v-model="models[key]"
+      >
+      </component>
+    </template>
+
   </IonContent>
 </template>
 
