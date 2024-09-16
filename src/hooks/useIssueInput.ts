@@ -1,4 +1,4 @@
-import {Project} from "@/types/tt";
+import {CustomField, Project} from "@/types/tt";
 import IssueInputText from "@/components/IssueInputText.vue";
 import {useTtStore} from "@/stores/ttStore";
 import IssueInputSelect from "@/components/IssueIonSelect.vue";
@@ -7,6 +7,7 @@ import api from "@/api";
 import {IonInput, IonSelect, IonSelectOption, IonTextarea} from "@ionic/vue";
 import {useI18n} from "vue-i18n";
 import IssueIonSelect from "@/components/IssueIonSelect.vue";
+import IssueFileInput from "@/components/IssueFileInput.vue";
 
 const useIssueInput = () => {
     const tt = useTtStore()
@@ -33,6 +34,58 @@ const useIssueInput = () => {
         return result
     }
 
+    const getCustomFieldComponent = (fieldId: string, project: Project) => {
+        const cf = tt.meta?.customFields.find(cf => cf.field === fieldId)
+        if (!cf)
+            return
+        let component;
+        const props: Record<string, any> = {
+            id: "_cf_" + fieldId,
+            field: cf.field,
+            labelPlacement: 'floating',
+            label: cf.fieldDisplay || fieldId
+        };
+        const slots: Record<string, any> = {};
+
+        switch (cf.type) {
+            case "text":
+                component = IonInput;
+                props.readonly = cf.editor === "text-ro";
+                props.type = cf.editor;
+                break;
+            case "select":
+                component = IssueIonSelect;
+                props.variants = cf.options.map(option => option.option);
+                props.text = cf.options.reduce((acc, item) => ({
+                    ...acc,
+                    [item.option]: item.optionDisplay
+                }), {} as Record<string, string>);
+                props.multiple = cf.format?.includes("multiple");
+                break;
+            case "array":
+                component = IssueIonSelect;
+                props.variants = []; // Здесь можно добавить обработку для массивов, если необходимо
+                props.multiple = true;
+                props.tags = true;
+                props.createTags = true;
+                break;
+            case "geo":
+                component = IonInput;
+                // Специфическая обработка для геоданных, можно добавить запросы API, если нужно
+                break;
+            case "users":
+                component = IssueIonSelect;
+                props.variants = getPeoples(project);
+                props.multiple = cf.format?.includes("multiple");
+                break;
+            default:
+                component = IonInput;
+                break;
+        }
+
+        return {component, props, slots};
+    };
+
     const getComponent = (field: string, _project?: Project) => {
         const project = _project || tt.project
 
@@ -48,40 +101,50 @@ const useIssueInput = () => {
         }
         const slots: Record<string, any> = {}
 
-        switch (field) {
-            case "subject":
-                component = IonInput
+        if (field.substring(0, 4) !== "_cf_")
+            switch (field) {
+                case "subject":
+                    component = IonInput
 
-                break;
-            case "description":
-            case "comment":
-            case "optionalComment":
-                component = IonTextarea
-                break;
-            case "resolution":
-                return IonInput
-            case "assigned":
-            case "watchers":
-                component = IssueIonSelect
-                props['variants'] = getPeoples(project)
-                props['multiple'] = isMultiple(project)
-                break
-            case "status":
-            case "tags":
-                component = IssueIonSelect
-                props['variants'] = project.tags.map(tag => tag.tag)
-                props['multiple'] = true
-                break
-            case "links":
-            case "workflow":
-                component = IssueIonSelect
-                break
-            case "commentPrivate":
-                component = IssueIonSelect
-                break
-            default:
-                component = IssueIonSelect
-                break
+                    break;
+                case "description":
+                case "comment":
+                case "optionalComment":
+                    component = IonTextarea
+                    break;
+                case "resolution":
+                    return IonInput
+                case "assigned":
+                case "watchers":
+                    component = IssueIonSelect
+                    props['variants'] = getPeoples(project)
+                    props['multiple'] = isMultiple(project)
+                    break
+                case "status":
+                case "tags":
+                    component = IssueIonSelect
+                    props['variants'] = project.tags.map(tag => tag.tag)
+                    props['multiple'] = true
+                    break
+                case "links":
+                case "workflow":
+                    component = IssueIonSelect
+                    break
+                case "commentPrivate":
+                    component = IssueIonSelect
+                    break
+                case "attachments":
+                    component = IssueFileInput
+                    break;
+                default:
+                    component = IonInput
+                    break
+            }
+        else {
+            const fieldId = field.substring(4)
+            const cf = getCustomFieldComponent(fieldId, project);
+            if (cf)
+                return cf
         }
         return {
             component,

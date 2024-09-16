@@ -1,30 +1,31 @@
 <script setup lang="ts">
 
 import {
+  alertController,
   IonButton,
   IonButtons,
   IonContent,
   IonHeader,
-  IonItem,
+  IonInput,
   IonSelect,
   IonSelectOption,
   IonTitle,
-  IonToolbar, modalController,
-  IonInput
+  IonToolbar,
+  modalController
 } from "@ionic/vue";
 import {useTtStore} from "@/stores/ttStore";
 import {computed, ref, watch} from "vue";
-import {Project, Workflow} from "@/types/tt";
 import IssueCatalogSelect from "@/components/IssueCatalogSelect.vue";
 import api from "@/api";
-import IssueInput from "@/components/IssueInput.vue";
 import useIssueInput from "@/hooks/useIssueInput";
+import {useRouter} from "vue-router";
 
 // Определяем тип для модели
-type Models = Record<string, string | number | boolean>;
+type Models = Record<string, any>;
 
 const tt = useTtStore()
 const u = useIssueInput()
+const router = useRouter()
 
 const project = ref(tt.project)
 const workflow = ref<string>()
@@ -65,7 +66,26 @@ const openCatalogSelect = async (e: Event) => {
   }
 }
 
-const h1 = () => {
+const confirm = () => {
+  console.log(models.value)
+  tt.createIssue({
+    project: project.value?.acronym,
+    workflow: workflow.value,
+    catalog: catalog.value,
+    ...models.value
+  })
+      .then(res => {
+        modalController.dismiss(null, 'confirm')
+        router.push(`/tt/issue?issueId=${res.id}`)
+      })
+      .catch(error => {
+        alertController.create({
+          header: 'Что то пошло не так',
+          message: error.message,
+          buttons: ['Ok'],
+        })
+            .then((alert) => alert.present())
+      })
 }
 const cancel = () => modalController.dismiss(null, 'cancel')
 
@@ -77,12 +97,13 @@ watch(catalog, () => {
     catalog: catalog.value,
   })
       .then(res => {
-        fields.value = res.template.fields;
+        fields.value = res.template.fields as Record<number, string>;
         Object.keys(fields.value).forEach(key => {
-          models.value[key] = ''; // Инициализируем пустой строкой или другим значением по умолчанию
+          models.value[fields.value[key]] = ''; // Инициализируем пустой строкой или другим значением по умолчанию
         });
       })
 })
+
 </script>
 
 <template>
@@ -93,7 +114,7 @@ watch(catalog, () => {
       </IonButtons>
       <IonTitle>{{ $t('tt.createIssue') }}</IonTitle>
       <IonButtons slot="end">
-        <IonButton @click="h1" :strong="true">{{ $t('base.confirm') }}</IonButton>
+        <IonButton @click="confirm" :strong="true">{{ $t('base.confirm') }}</IonButton>
       </IonButtons>
     </IonToolbar>
   </IonHeader>
@@ -142,7 +163,7 @@ watch(catalog, () => {
         :key="key"
         :is="getComponentResult[key].component"
         v-bind="getComponentResult[key].props"
-        v-model="models[key]"
+        v-model="models[field]"
     >
     </component>
 

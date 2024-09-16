@@ -10,7 +10,7 @@ export interface PhotoData {
 }
 
 export interface UserPhoto extends Photo {
-    data?: PhotoData;
+    data: PhotoData;
 }
 
 const convertBlobToBase64 = (blob: Blob) =>
@@ -23,7 +23,7 @@ const convertBlobToBase64 = (blob: Blob) =>
         reader.readAsDataURL(blob);
     });
 
-const blobToData = async (photo: Photo) => {
+const blobToData = async (photo: Photo): Promise<PhotoData> => {
     const date = Date.now();
     const fileName = `${date}.${photo.format}`;
     const response = await fetch(photo.webPath!);

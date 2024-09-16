@@ -75,6 +75,10 @@ export const useTtStore = defineStore('tt', () => {
         }
     }
 
+    const createIssue = async (issue: any) => {
+        return api.post(`tt/issue`, {issue})
+    }
+
     const addComment = (comment: string, commentPrivate: boolean) => {
         return api.post('tt/comment', {issueId: issue.value?.issue.issueId, comment, commentPrivate})
     }
@@ -106,6 +110,7 @@ export const useTtStore = defineStore('tt', () => {
         }
     }
 
+
     // getters
     const getters = {
         meta: computed(() => meta.value),
@@ -122,6 +127,7 @@ export const useTtStore = defineStore('tt', () => {
         getIssues,
         getIssue,
         updateIssue,
+        createIssue,
         addComment,
         editComment,
         addAttachment,

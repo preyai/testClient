@@ -4,11 +4,23 @@ import IssueField from "@/components/IssueField.vue";
 import {IonItemGroup, IonItemDivider, IonLabel} from "@ionic/vue";
 import {useTtStore} from "@/stores/ttStore";
 import IssueCustomField from "@/components/IssueCustomField.vue";
+import {computed} from "vue";
 
 const tt = useTtStore()
 const {issue} = defineProps<{
   issue: IssueData
 }>()
+
+const groupedCustomFields = computed(() => {
+  return tt.meta?.customFields.reduce((groups: Record<string, any[]>, field) => {
+    const catalog = field.catalog || 'Без категории';
+    if (!groups[catalog]) {
+      groups[catalog] = [];
+    }
+    groups[catalog].push(field);
+    return groups;
+  }, {});
+});
 </script>
 
 <template>
@@ -19,12 +31,12 @@ const {issue} = defineProps<{
     <IssueField v-for="field of issue.fields" :issue="issue.issue" :field="field" :key="field"/>
 
   </IonItemGroup>
-  <IonItemGroup>
+  <IonItemGroup v-for="(fields, catalog) in groupedCustomFields" :key="catalog">
     <IonItemDivider>
-      <IonLabel>custom</IonLabel>
+      <IonLabel>{{ catalog }}</IonLabel>
     </IonItemDivider>
     <IssueCustomField
-        v-for="field of tt.meta?.customFields"
+        v-for="field of fields"
         :key="field.field"
         :issue="issue.issue"
         :field="field"

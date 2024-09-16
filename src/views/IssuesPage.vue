@@ -22,7 +22,7 @@ const {openModal} = useIssueCreate()
 
 const issues = ref<Issue[]>([])
 const count = ref<number>(0)
-const limit = ref<number>(10)
+const limit = ref<number>(20)
 const skip = ref<number>(0)
 
 const load = async (event?: InfiniteScrollCustomEvent) => {
