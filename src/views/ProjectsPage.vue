@@ -18,7 +18,7 @@ import useIssueCreate from "@/hooks/useIssueCreate";
 
 const router = useRouter()
 const ttStore = useTtStore()
-const {openModal} = useIssueCreate()
+const {openActions} = useIssueCreate()
 
 const handler = async (project: Project) => {
   await router.push(`/tt/filters?projectId=${project.projectId}`)
@@ -37,7 +37,7 @@ const handleRefresh = (event: RefresherCustomEvent) => {
         label="projects"
         defaultHref="/tt"
         actions
-        @onActionsClick="openModal"
+        @onActionsClick="openActions"
     />
     <IonContent>
       <IonRefresher slot="fixed" @ionRefresh="handleRefresh($event)">

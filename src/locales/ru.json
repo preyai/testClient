@@ -6,7 +6,8 @@
     "tt": "ТТ",
     "edit": "Редактировать",
     "cancel": "Отмена",
-    "confirm": "Сохранить"
+    "confirm": "Сохранить",
+    "delete": "Удалить"
   },
   "authorization": {
     "username": "Логин",
@@ -59,6 +60,9 @@
     "commentPrivate": "Только для сотрудников",
     "camera": "Камера",
     "gallery": "Галерея",
-    "commented": "прокомментировал"
+    "commented": "прокомментировал",
+    "createIssue": "Новая задача",
+    "tags": "Ярлыки",
+    "tag": "Ярлык"
   }
 }

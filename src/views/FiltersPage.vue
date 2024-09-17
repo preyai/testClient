@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import {IonContent, IonItem, IonLabel, IonList, IonPage} from "@ionic/vue";
-import {computed, nextTick, onMounted} from "vue";
+import {computed, onMounted} from "vue";
 import {useTtStore} from "@/stores/ttStore";
 import PageHeader from "@/components/PageHeader.vue";
 import {useRouter} from "vue-router";
@@ -9,7 +9,7 @@ import useIssueCreate from "@/hooks/useIssueCreate";
 
 const router = useRouter()
 const ttStore = useTtStore()
-const {openModal} = useIssueCreate()
+const {openActions} = useIssueCreate()
 
 const filters = computed(() => ttStore.project?.filters)
 
@@ -32,7 +32,7 @@ onMounted(() => {
         label="filters"
         defaultHref="/tt"
         actions
-        @onActionsClick="openModal"
+        @onActionsClick="openActions"
     />
     <IonContent>
       <IonList v-if="filters">

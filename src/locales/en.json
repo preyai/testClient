@@ -6,7 +6,8 @@
     "tt": "TT",
     "edit": "Edit",
     "cancel": "Cancel",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "delete": "Delete"
   },
   "authorization": {
     "username": "Username",
@@ -59,6 +60,9 @@
     "commentPrivate": "For Employees Only",
     "camera": "Camera",
     "gallery": "Gallery",
-    "commented": "commented"
+    "commented": "commented",
+    "createIssue": "Create issue",
+    "tags": "Tags",
+    "tag": "Tag"
   }
 }

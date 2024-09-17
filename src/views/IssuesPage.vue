@@ -8,17 +8,20 @@ import {
   IonItem,
   IonLabel,
   IonList,
-  IonPage, IonRefresher, IonRefresherContent, RefresherCustomEvent
+  IonPage,
+  IonRefresher,
+  IonRefresherContent,
+  RefresherCustomEvent
 } from "@ionic/vue";
-import {nextTick, onMounted, ref} from "vue";
+import {onMounted, ref} from "vue";
 import PageHeader from "@/components/PageHeader.vue";
 import {useTtStore} from "@/stores/ttStore";
-import {DataStructure, Issue} from "@/types/tt";
+import {Issue} from "@/types/tt";
 import router from "@/router";
 import useIssueCreate from "@/hooks/useIssueCreate";
 
 const tt = useTtStore()
-const {openModal} = useIssueCreate()
+const {openActions} = useIssueCreate()
 
 const issues = ref<Issue[]>([])
 const count = ref<number>(0)
@@ -66,7 +69,7 @@ onMounted(() => {
         label="issues"
         defaultHref="/tt"
         actions
-        @onActionsClick="openModal"
+        @onActionsClick="openActions"
     />
     <IonContent>
       <IonRefresher slot="fixed" @ionRefresh="handleRefresh($event)">
