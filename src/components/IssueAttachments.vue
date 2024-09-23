@@ -59,10 +59,10 @@ const openModal = async () => {
 const deleteHandler = async (attachment: Attachment) => {
 
   const alert = await alertController.create({
-    header: t('tt.confirmation'),
+    header: t('base.confirmation'),
     message: `${t('tt.deleteFile')} "${attachment.filename}"?`,
     buttons: [{
-      text: t('tt.delete'),
+      text: t('base.delete'),
       handler: async () => {
         api.request(`tt/file`, 'DELETE', JSON.stringify({
           issueId: issue.issue.issueId,

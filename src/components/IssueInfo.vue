@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {IssueData} from "@/types/tt";
+import {CustomField, IssueData} from "@/types/tt";
 import IssueField from "@/components/IssueField.vue";
 import {IonItemGroup, IonItemDivider, IonLabel} from "@ionic/vue";
 import {useTtStore} from "@/stores/ttStore";
@@ -12,7 +12,7 @@ const {issue} = defineProps<{
 }>()
 
 const groupedCustomFields = computed(() => {
-  return tt.meta?.customFields.reduce((groups: Record<string, any[]>, field) => {
+  return tt.meta?.customFields.reduce((groups: Record<string, CustomField[]>, field) => {
     const catalog = field.catalog || 'Без категории';
     if (!groups[catalog]) {
       groups[catalog] = [];
@@ -35,11 +35,12 @@ const groupedCustomFields = computed(() => {
     <IonItemDivider>
       <IonLabel>{{ catalog }}</IonLabel>
     </IonItemDivider>
-    <IssueCustomField
+    <IssueField
         v-for="field of fields"
         :key="field.field"
         :issue="issue.issue"
-        :field="field"
+        :field="`_cf_${field.field}`"
+        :cf="field"
     />
   </IonItemGroup>
 </template>

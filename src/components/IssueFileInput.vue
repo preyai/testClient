@@ -27,13 +27,14 @@ const selectFiles = () => {
 const handleFileChange = async (event: Event) => {
   const target = event.target as HTMLInputElement;
   if (target.files) {
-    for (const file of target.files) {
+    for (const file of Array.from(target.files)) {
       const base64Data = await convertFileToBase64(file);
+      const cleanBase64Data = base64Data.split(',')[1];
       if (Array.isArray(items.value))
         items.value.push({
           name: file.name,
           type: file.type,
-          body: base64Data,
+          body: cleanBase64Data,
           size: file.size,
           date: file.lastModified
         });
@@ -41,7 +42,7 @@ const handleFileChange = async (event: Event) => {
         items.value = [{
           name: file.name,
           type: file.type,
-          body: base64Data,
+          body: cleanBase64Data,
           size: file.size,
           date: file.lastModified
         }];

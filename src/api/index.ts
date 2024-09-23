@@ -1,5 +1,4 @@
 import {useAuthStore} from "@/stores/authStore";
-import {logger} from "workbox-core/_private";
 
 
 const request = async (url: string, method?: string, body?: any) => {
@@ -46,5 +45,8 @@ const put = async (url: string, params: object) => {
     return await request(url, 'PUT', JSON.stringify(params))
 }
 
+const _delete = async (url: string, params?: object) => {
+    return await request(url, 'DELETE', JSON.stringify(params))
+}
 
-export default {request, get, post, put}
+export default {request, get, post, put, delete: _delete}

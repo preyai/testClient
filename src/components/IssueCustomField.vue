@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import {CustomField, DetailIssue} from "@/types/tt";
 import {IonItem, IonLabel, IonText} from "@ionic/vue";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 
 const {issue, field} = defineProps<{ issue: DetailIssue, field: CustomField }>()
 const text = ref<string>()
 
-
-onMounted(() => {
+const setText = () => {
   const value = issue[`_cf_${field.field}`]
   if (value)
     switch (field.type) {
@@ -18,7 +17,10 @@ onMounted(() => {
         text.value = value
         break;
     }
-})
+}
+
+onMounted(setText)
+watch(() => issue, setText)
 
 </script>
 

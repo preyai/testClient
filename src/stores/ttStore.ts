@@ -71,6 +71,7 @@ export const useTtStore = defineStore('tt', () => {
             const res = await api.get(`tt/issue/${issueId}`)
             return res.issue
         } catch (err) {
+            await api.delete(`tt/issue/${issueId}`)
             return Promise.reject()
         }
     }

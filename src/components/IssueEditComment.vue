@@ -35,7 +35,7 @@ const confirm = () => {
       <IonButtons slot="start">
         <IonButton color="medium" @click="cancel">{{ $t('base.cancel') }}</IonButton>
       </IonButtons>
-      <IonTitle>{{ $t('tt.editComment') }}</IonTitle>
+      <IonTitle>{{ $t('tt.modifyComment') }}</IonTitle>
       <IonButtons slot="end">
         <IonButton @click="confirm" :strong="true">{{ $t('base.confirm') }}</IonButton>
       </IonButtons>

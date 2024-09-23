@@ -3,10 +3,10 @@ import {IonIcon, IonLabel, IonPage, IonRouterOutlet, IonTabBar, IonTabButton, Io
 import {business, cog, list} from "ionicons/icons";
 
 const tabs = [
-  {
-    name: "addresses",
-    icon: business
-  },
+  // {
+  //   name: "addresses",
+  //   icon: business
+  // },
   {
     name: "tt",
     icon: list

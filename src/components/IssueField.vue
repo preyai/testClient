@@ -1,29 +1,58 @@
 <script setup lang="ts">
-
+import api from "@/api";
 import {IonItem, IonLabel, IonText, IonTitle} from "@ionic/vue";
-import {DetailIssue} from "@/types/tt";
+import {CustomField, DetailIssue} from "@/types/tt";
 import dayjs from "dayjs";
+import {onMounted, ref, watch} from "vue";
+import {useTtStore} from "@/stores/ttStore";
 
-const {issue, field} = defineProps<{ issue: DetailIssue, field: string }>()
+const {issue, field, cf} = defineProps<{ issue: DetailIssue, field: string, cf?: CustomField }>()
 // const text = Array.isArray(issue[field]) ? issue[field].join(', ') : issue[field]
-let text: string;
 
-switch (field) {
-  case "created":
-  case "updated":
-    text = dayjs(issue[field] * 1000).format('DD.MM.YYYY HH:mm')
-    break;
-  default:
-    text = Array.isArray(issue[field]) ? issue[field].join(', ') : issue[field]
-    break;
+const tt = useTtStore()
+const text = ref<string>()
+
+const setText = () => {
+
+  const value = issue[field]
+  const viewer = tt.meta?.viewers.find(v => v.field === field)
+
+  if (viewer) {
+
+    const f = new Function('value', 'issue', 'field', 'target', 'filter', 'api', 'text', viewer.code)
+    text.value = f(value, issue.issueId, field, 'pwa', '', api, text)
+  } else if (cf) {
+
+    if (value)
+      switch (cf.type) {
+        case "array":
+          text.value = Object.values(value).join(',')
+          break;
+        default:
+          text.value = value
+          break;
+      }
+  } else
+    switch (field) {
+      case "created":
+      case "updated":
+        text.value = dayjs(value * 1000).format('DD.MM.YYYY HH:mm')
+        break;
+      default:
+        text.value = Array.isArray(value) ? value.join(', ') : value
+        break;
+    }
 }
+
+onMounted(setText)
+watch(() => issue, setText)
 
 </script>
 
 <template>
   <IonItem v-if="text">
     <IonLabel>
-      <h2>{{ $t(`tt.${field}`) }}</h2>
+      <h2>{{ cf?.fieldDisplay || $t(`tt.${field}`) }}</h2>
       <IonText class="filed-content ion-padding-vertical">{{ text }}</IonText>
     </IonLabel>
   </IonItem>
@@ -32,5 +61,6 @@ switch (field) {
 <style scoped>
 .filed-content {
   font-size: 120%;
+  white-space: pre-line;
 }
 </style>

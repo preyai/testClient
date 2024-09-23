@@ -7,7 +7,8 @@
     "edit": "Редактировать",
     "cancel": "Отмена",
     "confirm": "Сохранить",
-    "delete": "Удалить"
+    "delete": "Удалить",
+    "confirmation": "Подтверждение"
   },
   "authorization": {
     "username": "Логин",
@@ -63,6 +64,8 @@
     "commented": "прокомментировал",
     "createIssue": "Новая задача",
     "tags": "Ярлыки",
-    "tag": "Ярлык"
+    "tag": "Ярлык",
+    "modifyComment": "Редактировать комментарий",
+    "deleteFile": "Удалить файл"
   }
 }

@@ -121,8 +121,8 @@ router.beforeEach(async (to) => {
         await authStore.loadAuthState()
     if (to.name !== 'Login' && !authStore.isAuthenticated)
         return '/login'
-    if (to.path === '/')
-        return '/addresses'
+    // if (to.path === '/')
+    //     return '/addresses'
     if (to.path.startsWith('/tt') && !ttStore.meta)
         await ttStore.load()
 })
