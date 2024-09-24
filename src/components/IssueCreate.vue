@@ -40,7 +40,7 @@ const getComponentResult = computed(() => {
     props: Record<string, any>;
   }>>((acc: any, key) => {
     const field = fields.value[key];
-    acc[key] = u.getComponent(field);
+    acc[key] = u.getComponent(field, project.value);
     return acc;
   }, {});
 });

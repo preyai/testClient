@@ -64,10 +64,11 @@ const deleteHandler = async (attachment: Attachment) => {
     buttons: [{
       text: t('base.delete'),
       handler: async () => {
-        api.request(`tt/file`, 'DELETE', JSON.stringify({
+        api.delete('tt/file', {
           issueId: issue.issue.issueId,
           filename: attachment.filename,
-        })).then(() => tt.updateIssue())
+        })
+            .then(() => tt.updateIssue())
       }
     }],
   });

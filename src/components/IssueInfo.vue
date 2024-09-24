@@ -3,7 +3,6 @@ import {CustomField, IssueData} from "@/types/tt";
 import IssueField from "@/components/IssueField.vue";
 import {IonItemGroup, IonItemDivider, IonLabel} from "@ionic/vue";
 import {useTtStore} from "@/stores/ttStore";
-import IssueCustomField from "@/components/IssueCustomField.vue";
 import {computed} from "vue";
 
 const tt = useTtStore()
@@ -26,12 +25,30 @@ const groupedCustomFields = computed(() => {
 <template>
   <IonItemGroup>
     <IonItemDivider>
+      <IonLabel>0</IonLabel>
+    </IonItemDivider>
+    <IssueField
+        v-for="field in Object.values(issue.fields).filter(f=>f[0]==='*')"
+        :issue="issue.issue"
+        :field="field"
+        :key="field"
+        :cf="field.match('_cf_') ? tt.meta?.customFields.find(cf=>cf.field === field.slice(5)) : undefined"
+    />
+  </IonItemGroup>
+
+  <IonItemGroup>
+    <IonItemDivider>
       <IonLabel>base</IonLabel>
     </IonItemDivider>
-    <IssueField v-for="field of issue.fields" :issue="issue.issue" :field="field" :key="field"/>
-
+    <IssueField
+        v-for="field of Object.values(issue.fields).filter(field=>field[0]!=='*' && !field.match('_cf_'))"
+        :issue="issue.issue"
+        :field="field"
+        :key="field"
+    />
   </IonItemGroup>
-  <IonItemGroup v-for="(fields, catalog) in groupedCustomFields" :key="catalog">
+
+  <IonItemGroup v-for="(fields, catalog) in groupedCustomFields" :key="catalog" class="item-group-has">
     <IonItemDivider>
       <IonLabel>{{ catalog }}</IonLabel>
     </IonItemDivider>
@@ -46,5 +63,8 @@ const groupedCustomFields = computed(() => {
 </template>
 
 <style scoped>
-
+/* скрытие пустых групп */
+.item-group-has:not(:has(.filed-content)) {
+  display: none !important;
+}
 </style>
