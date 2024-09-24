@@ -7,7 +7,10 @@
     "edit": "Edit",
     "cancel": "Cancel",
     "confirm": "Confirm",
-    "delete": "Delete"
+    "delete": "Delete",
+    "confirmation": "Confirmation",
+    "yes": "Yes",
+    "no": "No"
   },
   "authorization": {
     "username": "Username",

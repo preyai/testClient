@@ -16,7 +16,8 @@ const groupedCustomFields = computed(() => {
     if (!groups[catalog]) {
       groups[catalog] = [];
     }
-    groups[catalog].push(field);
+    if (Object.values(issue.fields).includes(`_cf_${field.field}`))
+      groups[catalog].push(field);
     return groups;
   }, {});
 });
@@ -27,6 +28,13 @@ const groupedCustomFields = computed(() => {
     <IonItemDivider>
       <IonLabel>0</IonLabel>
     </IonItemDivider>
+    <IssueField
+        :issue="issue.issue"
+        field="_cf_debt_services"
+        key="_cf_debt_services"
+        :cf="tt.meta?.customFields.find(cf=>cf.field === 'debt_services') || undefined"
+        _value="test"
+    />
     <IssueField
         v-for="field in Object.values(issue.fields).filter(f=>f[0]==='*')"
         :issue="issue.issue"

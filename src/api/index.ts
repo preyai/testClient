@@ -10,24 +10,21 @@ const request = async (url: string, method?: string, body?: any) => {
     const headers = new Headers({
         authorization: `Bearer ${auth.token}`
     })
-    try {
-        const res = await fetch(`${SERVER_URL}/${url}`, {
-            method: method,
-            headers,
-            body
-        }).catch(() => {
-            throw new Error(`Failed to fetch`);
-        })
-        const data: any = await res.json();
-        if (data && data.error && data.error === 'tokenNotFound') {
-            return useAuthStore().logout()
-        }
-        return data
-    } catch (error) {
-        console.warn(error)
-        throw error
+    const res = await fetch(`${SERVER_URL}/${url}`, {
+        method: method,
+        headers,
+        body
+    }).catch(() => {
+        throw new Error(`Failed to fetch`);
+    })
+    const data: any = await res.json();
+    if (data && data.error && data.error === 'tokenNotFound') {
+        await useAuthStore().logout()
     }
-
+    if (data.error)
+        throw new Error(data.error)
+    else
+        return data
 }
 
 const get = async (url: string, params?: Record<string, string>) => {
