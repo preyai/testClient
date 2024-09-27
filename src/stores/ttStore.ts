@@ -1,8 +1,7 @@
 import {defineStore} from "pinia";
-import {computed, onMounted, ref} from "vue";
+import {computed, ref} from "vue";
 import {DataStructure, IssueData, Meta, Project} from "@/types/tt";
 import api from "@/api";
-import {useAttachments} from "@/hooks/useAttachments";
 import {alertController} from "@ionic/vue";
 
 export const useTtStore = defineStore('tt', () => {

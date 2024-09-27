@@ -63,7 +63,7 @@ const openModal = async (comment?: Comment, index?: number) => {
     <IonCardHeader>
       <IonCardTitle>
         {{ comment.author }} {{ $t('tt.commented') }} [#{{ (Number(index) + 1) }}]
-        {{ dayjs(comment.created * 1000).format('DD.MM.YYYY HH:mm') }}
+        {{ dayjs.unix(comment.created).format('DD.MM.YYYY HH:mm') }}
         <IonIcon :icon="comment.private? eyeOff : eye"></IonIcon>
       </IonCardTitle>
     </IonCardHeader>

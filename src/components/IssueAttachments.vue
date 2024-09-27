@@ -86,7 +86,7 @@ const deleteHandler = async (attachment: Attachment) => {
         :src="`${SERVER_URL}/tt/file?issueId=${issue.issue.issueId}&filename=${img.filename}&_token=${token}`"
     />
     <IonCardHeader>
-      <IonCardTitle>{{ dayjs(img.metadata.date * 1000).format('DD.MM.YYYY HH:mm') }} - {{
+      <IonCardTitle>{{ dayjs.unix(img.metadata.date).format('DD.MM.YYYY HH:mm') }} - {{
           img.metadata.attachman
         }}
       </IonCardTitle>

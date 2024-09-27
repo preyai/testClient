@@ -3,9 +3,12 @@ import {CustomField, IssueData} from "@/types/tt";
 import IssueField from "@/components/IssueField.vue";
 import {IonItemGroup, IonItemDivider, IonLabel} from "@ionic/vue";
 import {useTtStore} from "@/stores/ttStore";
-import {computed} from "vue";
+import {computed, provide} from "vue";
+import useViewers from "@/hooks/useViewers";
 
 const tt = useTtStore()
+const viewers = useViewers()
+provide<typeof viewers>('viewers', viewers)
 const {issue} = defineProps<{
   issue: IssueData
 }>()

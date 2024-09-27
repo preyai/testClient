@@ -37,7 +37,8 @@ const load = async (event?: InfiniteScrollCustomEvent) => {
     skip.value = Number(res.skip) + limit.value
     event?.target.complete()
   } catch (e) {
-    await router.replace('/tt')
+    if (issues.value.length === 0)
+      await router.replace('/tt')
   }
 }
 

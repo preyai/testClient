@@ -27,7 +27,7 @@ const handler = () => {
 }
 
 watch(() => authStore.isAuthenticated, () => {
-  push('/addresses')
+  push('/')
 })
 
 </script>

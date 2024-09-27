@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import api from "@/api";
-import {IonItem, IonLabel, IonText, IonProgressBar} from "@ionic/vue";
+import {IonItem, IonLabel, IonProgressBar, IonText} from "@ionic/vue";
 import {CustomField, DetailIssue} from "@/types/tt";
 import dayjs from "dayjs";
-import {computed, onMounted, onUnmounted, ref, watch} from "vue";
+import {computed, inject, onMounted, ref, watch} from "vue";
 import {useTtStore} from "@/stores/ttStore";
 import {useI18n} from "vue-i18n";
-import parseFloatEx from "@/utils/parseFloatEx";
-import parseIntEx from "@/utils/parseIntEx";
-import {remove} from "ionicons/icons";
+import useViewers, {UseViewers} from "@/hooks/useViewers";
+
 
 const {issue, field: _field, cf, _value} = defineProps<{
   issue: DetailIssue,
@@ -16,42 +14,35 @@ const {issue, field: _field, cf, _value} = defineProps<{
   cf?: CustomField,
   _value?: any
 }>()
-// const text = Array.isArray(issue[field]) ? issue[field].join(', ') : issue[field]
 
 const tt = useTtStore()
 const {t} = useI18n()
-const text = ref<string>()
+const text = ref<string | undefined>()
 const field = computed(() => _field[0] === '*' ? _field.slice(1) : _field)
+const viewers = inject<UseViewers>('viewers') || useViewers()
+
 
 const setText = () => {
-
   const value = _value || issue[field.value]
   const viewer = tt.meta?.viewers.find(v => v.field === field.value)
 
   if (viewer) {
     try {
-      const utils = {
-        api,
-        dayjs,
-        parseFloatEx,
-        parseIntEx
-      }
-      const f = new Function('value', 'issue', 'field', 'target', 'filter', 'text', 'utils', viewer.code)
-      console.log(field.value, f(value, issue, field, 'pwa', '', text, utils))
-      text.value = f(value, issue, field, 'pwa', '', text, utils)
+      const _viewer = viewers.getViewer(viewer.code)
+      text.value = _viewer(value, issue, field.value, text)
     } catch (e) {
       text.value = value
-      console.warn(e)
+      console.warn(viewer.filename,e)
     }
   } else if (cf) {
 
     if (value)
       switch (cf.editor) {
         case "date":
-          text.value = dayjs(value * 1000).format('DD.MM.YYYY')
+          text.value = dayjs.unix(value).format('DD.MM.YYYY')
           break;
         case "datetime-local":
-          text.value = dayjs(value * 1000).format('DD.MM.YYYY HH:mm')
+          text.value = dayjs.unix(value).format('DD.MM.YYYY HH:mm')
           break;
         case "noyes":
           text.value = Number(value) ? t('base.yes') : t('base.no')
@@ -76,7 +67,7 @@ const setText = () => {
         break;
       case "created":
       case "updated":
-        text.value = dayjs(value * 1000).format('DD.MM.YYYY HH:mm')
+        text.value = dayjs.unix(value).format('DD.MM.YYYY HH:mm')
         break;
       default:
         text.value = Array.isArray(value) ? value.join(', ') : value
