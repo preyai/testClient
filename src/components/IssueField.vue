@@ -94,8 +94,4 @@ watch(() => issue, setText)
 </template>
 
 <style scoped>
-.filed-content {
-  font-size: 120%;
-  white-space: pre-line;
-}
 </style>
