@@ -31,13 +31,13 @@ const groupedCustomFields = computed(() => {
     <IonItemDivider>
       <IonLabel>0</IonLabel>
     </IonItemDivider>
-    <IssueField
-        :issue="issue.issue"
-        field="_cf_debt_services"
-        key="_cf_debt_services"
-        :cf="tt.meta?.customFields.find(cf=>cf.field === 'debt_services') || undefined"
-        _value="test"
-    />
+<!--    <IssueField-->
+<!--        :issue="issue.issue"-->
+<!--        field="_cf_object_id"-->
+<!--        key="_cf_object_id"-->
+<!--        :cf="tt.meta?.customFields.find(cf=>cf.field === 'object_id') || undefined"-->
+<!--        _value="100000005"-->
+<!--    />-->
     <IssueField
         v-for="field in Object.values(issue.fields).filter(f=>f[0]==='*')"
         :issue="issue.issue"
@@ -75,7 +75,7 @@ const groupedCustomFields = computed(() => {
 
 <style scoped>
 /* скрытие пустых групп */
-.item-group-has:not(:has(.filed-content)) {
+.item-group-has:not(:has(ion-item)) {
   display: none !important;
 }
 </style>

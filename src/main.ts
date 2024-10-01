@@ -37,10 +37,19 @@ import './theme/variables.css';
 import {createPinia} from "pinia";
 import {defineCustomElements} from '@ionic/pwa-elements/loader';
 import i18n from "@/i18n";
+import {addIcons} from "ionicons";
+import {chatbubbles, home, notifications, notificationsOff} from "ionicons/icons";
 
 const pinia = createPinia();
 
 defineCustomElements(window);
+
+addIcons({
+    'notifications': notifications,
+    'notifications-off': notificationsOff,
+    'chatbubbles': chatbubbles,
+    'home': home
+});
 
 const app = createApp(App)
     .use(IonicVue)
