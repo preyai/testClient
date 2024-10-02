@@ -67,7 +67,6 @@ const openCatalogSelect = async (e: Event) => {
 }
 
 const confirm = () => {
-  console.log(models.value)
   tt.createIssue({
     project: project.value?.acronym,
     workflow: workflow.value,

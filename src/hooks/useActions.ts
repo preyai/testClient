@@ -7,6 +7,7 @@ import {IssueData} from "@/types/tt";
 import {useI18n} from "vue-i18n";
 import api from "@/api";
 import {useTtStore} from "@/stores/ttStore";
+import useModal from "@/hooks/useModal";
 
 const specialActions = [
     "saAddComment",
@@ -25,6 +26,7 @@ export const useActions = () => {
 
     const {t} = useI18n()
     const tt = useTtStore()
+    const {openModal} = useModal()
 
     const getActionLabel = (action: string) => {
         let text: string;
@@ -82,14 +84,6 @@ export const useActions = () => {
         else
             openModal(IssueAction, {name})
     }
-
-    const openModal = (component: ComponentRef, props?: any) => {
-        modalController.create({
-            component: component,
-            componentProps: props
-        }).then(modal => modal.present())
-    }
-
 
     return {
         getActionLabel,

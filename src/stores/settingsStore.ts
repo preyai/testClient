@@ -11,7 +11,6 @@ const useSettingsStore = defineStore('config', () => {
     const init = async () => {
         await Promise.all([
             Preferences.get({key: 'locale'}).then(({value}) => {
-                console.log(value)
                 if (value)
                     locale.value = value as typeof i18n.availableLocales[number]
             })

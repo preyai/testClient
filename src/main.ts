@@ -38,7 +38,7 @@ import {createPinia} from "pinia";
 import {defineCustomElements} from '@ionic/pwa-elements/loader';
 import i18n from "@/i18n";
 import {addIcons} from "ionicons";
-import {chatbubbles, home, notifications, notificationsOff} from "ionicons/icons";
+import {chatbubbles, happy, home, notifications, notificationsOff, sad, time} from "ionicons/icons";
 
 const pinia = createPinia();
 
@@ -48,7 +48,10 @@ addIcons({
     'notifications': notifications,
     'notifications-off': notificationsOff,
     'chatbubbles': chatbubbles,
-    'home': home
+    'home': home,
+    'happy': happy,
+    'sad': sad,
+    'time': time
 });
 
 const app = createApp(App)

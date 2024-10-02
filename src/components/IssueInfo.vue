@@ -3,8 +3,10 @@ import {CustomField, IssueData} from "@/types/tt";
 import IssueField from "@/components/IssueField.vue";
 import {IonItemGroup, IonItemDivider, IonLabel} from "@ionic/vue";
 import {useTtStore} from "@/stores/ttStore";
-import {computed, provide} from "vue";
+import {computed, onMounted, provide} from "vue";
 import useViewers from "@/hooks/useViewers";
+import useModal from "@/hooks/useModal";
+import Map from "@/components/Map.vue"
 
 const tt = useTtStore()
 const viewers = useViewers()
@@ -24,6 +26,14 @@ const groupedCustomFields = computed(() => {
     return groups;
   }, {});
 });
+const value = `1704067200,1000
+1704153600,2000
+1704240000,1500
+1704326400,2500
+1704412800,3000
+1704499200,500
+1704585600,1200`;
+
 </script>
 
 <template>
@@ -31,13 +41,13 @@ const groupedCustomFields = computed(() => {
     <IonItemDivider>
       <IonLabel>0</IonLabel>
     </IonItemDivider>
-<!--    <IssueField-->
-<!--        :issue="issue.issue"-->
-<!--        field="_cf_object_id"-->
-<!--        key="_cf_object_id"-->
-<!--        :cf="tt.meta?.customFields.find(cf=>cf.field === 'object_id') || undefined"-->
-<!--        _value="100000005"-->
-<!--    />-->
+    <IssueField
+        :issue="issue.issue"
+        field="_cf_debt_payments"
+        key="_cf_debt_payments"
+        :cf="tt.meta?.customFields.find(cf=>cf.field === 'debt_payments') || undefined"
+        :_value="value"
+    />
     <IssueField
         v-for="field in Object.values(issue.fields).filter(f=>f[0]==='*')"
         :issue="issue.issue"
@@ -76,6 +86,6 @@ const groupedCustomFields = computed(() => {
 <style scoped>
 /* скрытие пустых групп */
 .item-group-has:not(:has(ion-item)) {
-  display: none !important;
+  //display: none !important;
 }
 </style>

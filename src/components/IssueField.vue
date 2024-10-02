@@ -2,7 +2,7 @@
 import {IonItem, IonLabel, IonProgressBar, IonText} from "@ionic/vue";
 import {CustomField, DetailIssue} from "@/types/tt";
 import dayjs from "dayjs";
-import {computed, inject, onMounted, ref, watch} from "vue";
+import {computed, inject, onMounted, ref, shallowRef, watch} from "vue";
 import {useTtStore} from "@/stores/ttStore";
 import {useI18n} from "vue-i18n";
 import useViewers, {UseViewers} from "@/hooks/useViewers";
@@ -18,6 +18,7 @@ const {issue, field: _field, cf, _value} = defineProps<{
 const tt = useTtStore()
 const {t} = useI18n()
 const text = ref<string | undefined>()
+const component = shallowRef<any>()
 const field = computed(() => _field[0] === '*' ? _field.slice(1) : _field)
 const viewers = inject<UseViewers>('viewers') || useViewers()
 
@@ -29,7 +30,12 @@ const setText = () => {
   if (viewer) {
     try {
       const _viewer = viewers.getViewer(viewer.code)
-      text.value = _viewer(value, issue, field.value, text)
+      const result = _viewer(value, issue, field.value)
+      if (result && typeof result === 'object' && result.template) {
+        component.value = result
+      }
+      else
+        text.value = result
     } catch (e) {
       text.value = value
       console.warn(viewer.filename,e)
@@ -81,13 +87,14 @@ watch(() => issue, setText)
 </script>
 
 <template>
-  <IonItem v-if="text">
+  <IonItem v-if="text || component">
     <IonLabel>
       <h2>{{ cf?.fieldDisplay || $t(`tt.${field}`) }}</h2>
       <IonProgressBar v-if="text==='$loading$'" type="indeterminate"/>
-      <IonText v-else class="filed-content ion-padding-vertical">
-        <div v-html="text"></div>
-      </IonText>
+<!--      <IonText v-else class="filed-content ion-padding-vertical">-->
+        <component v-if="component" :is="component"/>
+        <div v-else v-html="text"></div>
+<!--      </IonText>-->
 
     </IonLabel>
   </IonItem>
