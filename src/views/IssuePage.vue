@@ -10,7 +10,7 @@ import {
   IonSegmentButton,
   IonToolbar
 } from "@ionic/vue";
-import {computed, nextTick, onMounted, ref} from "vue";
+import {computed, nextTick, onMounted, ref, watch} from "vue";
 import PageHeader from "@/components/PageHeader.vue";
 import {useTtStore} from "@/stores/ttStore";
 import IssueInfo from "@/components/IssueInfo.vue";
@@ -34,7 +34,7 @@ const showActions = () => {
   isOpen.value = true
 }
 
-onMounted(() => {
+const loadIssue = () => {
   const issueId = router.currentRoute.value.query['issueId']?.toString()
   if (issueId)
     tt.setIssue(issueId)
@@ -49,7 +49,10 @@ onMounted(() => {
             }],
           }).then(alert => alert.present())
         })
-})
+}
+onMounted(loadIssue)
+
+watch(() => router.currentRoute.value.query['issueId'], loadIssue)
 </script>
 
 <template>

@@ -3,10 +3,13 @@ import {modalController} from "@ionic/vue";
 
 const useModal = () => {
     const openModal = (component: ComponentRef, props?: any) => {
-        modalController.create({
+        const modal = modalController.create({
             component: component,
             componentProps: props
-        }).then(modal => modal.present())
+        })
+
+        modal.then(m => m.present())
+        return modal;
     }
 
     return {openModal};

@@ -16,51 +16,73 @@ import api from "@/api";
 import {useTtStore} from "@/stores/ttStore";
 import IssueInput from "@/components/IssueInput.vue";
 
-const {name} = defineProps<{
-  name: string
+const {name, _fields, issue} = defineProps<{
+  name: string,
+  _fields?: string[],
+  issue?: string | string[]
 }>()
 
 const tt = useTtStore()
 
 const fields = ref<Record<string, any>>({});
 
+const initFields = (labels: string[]) => {
+  // Ищем индекс поля с ключом 'comment'
+  const commentIndex = labels.findIndex((key) => key === 'comment' || key === 'optionalComment');
+
+  // Если поле 'comment' найдено, добавляем поле 'commentPrivate' после него
+  if (commentIndex !== -1) {
+    labels.splice(commentIndex + 1, 0, 'commentPrivate'); // Вставляем после 'comment'
+  }
+
+  // Преобразуем массив обратно в объект и сохраняем его в fields.value
+  fields.value = Object.fromEntries(
+      labels.map((value) => [value, value === 'commentPrivate' ? true : '']))
+}
+
 const cancel = () => modalController.dismiss(null, 'cancel');
 
 const confirm = () => {
-  tt.doAction(name)
-      .then(() => modalController.dismiss(null, 'confirm'))
+  if (Array.isArray(issue))
+    for (const id of issue)
+      tt.doAction(name, fields.value, id)
+          .then(() => modalController.dismiss(null, 'confirm'))
+  else if (issue)
+    tt.doAction(name, fields.value, issue)
+        .then(() => modalController.dismiss(null, 'confirm'))
+  else
+    tt.doAction(name, fields.value)
+        .then(() => modalController.dismiss(null, 'confirm'))
 }
 
 onMounted(
     () => {
-      if (!tt.issue) return;
-      api.get('tt/action', {
-        _id: tt.issue.issue.issueId,
-        action: name
-      }).then(res => {
+      const id = issue ? (Array.isArray(issue) ? issue[0] : issue) : tt.issue ? tt.issue.issue.issueId : undefined;
+      if (!id)
+        return;
 
-        // Преобразуем объект в массив пар ключ-значение
-        const values = Object.values(res.template);
-
-        // Ищем индекс поля с ключом 'comment'
-        const commentIndex = values.findIndex((key) => key === 'comment' || key === 'optionalComment');
-
-        // Если поле 'comment' найдено, добавляем поле 'commentPrivate' после него
-        if (commentIndex !== -1) {
-          values.splice(commentIndex + 1, 0, 'commentPrivate'); // Вставляем после 'comment'
-        }
-
-        // Преобразуем массив обратно в объект и сохраняем его в fields.value
-        fields.value = Object.fromEntries(
-            values.map((value) => [value, value === 'commentPrivate' ? true : '']))
-      }).catch((error) => {
-        alertController.create({
-          header: 'Что то пошло не так',
-          message: error.message,
-          buttons: ['Ok'],
+      if (_fields)
+        initFields(_fields);
+      else
+        api.get('tt/action', {
+          _id: id,
+          action: name
         })
-            .then((alert) => alert.present())
-      })
+            .then(res => {
+              if (typeof res.template === 'string')
+                initFields([res.template]);
+              else
+                initFields(Object.values(res.template));
+
+            })
+            .catch((error) => {
+              alertController.create({
+                header: 'Что то пошло не так',
+                message: error.message,
+                buttons: ['Ok'],
+              })
+                  .then((alert) => alert.present())
+            })
     });
 
 </script>

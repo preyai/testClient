@@ -79,8 +79,14 @@ export const useTtStore = defineStore('tt', () => {
         return api.post(`tt/issue`, {issue})
     }
 
-    const addComment = (comment: string, commentPrivate: boolean) => {
-        return api.post('tt/comment', {issueId: issue.value?.issue.issueId, comment, commentPrivate})
+    const addComment = async (comment: string, commentPrivate: boolean, issueId?: string) => {
+        const result = await api.post('tt/comment', {
+            issueId: issueId || issue.value?.issue.issueId,
+            comment,
+            commentPrivate
+        })
+        await updateIssue()
+        return result
     }
 
     const editComment = (comment: string, commentPrivate: boolean, commentIndex: number) => {
@@ -92,9 +98,10 @@ export const useTtStore = defineStore('tt', () => {
         return api.post('tt/file', {issueId: issue.value?.issue.issueId, attachments: [attachment]})
     }
 
-    const doAction = async (action: string, set?: any) => {
+    const doAction = async (action: string, set?: any, issueId?: string) => {
+        console.log(set)
         try {
-            await api.put(`tt/action/${issue.value?.issue.issueId}`, {
+            await api.put(`tt/action/${issueId || issue.value?.issue.issueId}`, {
                 action,
                 set
             });

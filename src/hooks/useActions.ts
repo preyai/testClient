@@ -54,7 +54,7 @@ export const useActions = () => {
         })
     }
 
-    const initAction = (_name: string) => {
+    const initAction = (_name: string, issue?: string | string[], fields?: string[]) => {
         let name = _name
         const withoutAccept = name.at(0) === '!'
         if (withoutAccept)
@@ -62,11 +62,11 @@ export const useActions = () => {
         if (specialActions.includes(name))
             switch (name) {
                 case "saAddComment":
-                    openModal(IssueAddComment)
+                    openModal(IssueAddComment, {issue}).then(() => null)
                     break;
                 case "saAddFile":
                 case "ttSaAddSingleFile":
-                    openModal(IssueAddFile)
+                    openModal(IssueAddFile).then(() => null)
                     break;
                 default:
                     console.log(name)
@@ -82,7 +82,7 @@ export const useActions = () => {
                         .then((alert) => alert.present())
                 })
         else
-            openModal(IssueAction, {name})
+            openModal(IssueAction, {name, issue, _fields: fields}).then(() => null)
     }
 
     return {

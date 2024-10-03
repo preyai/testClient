@@ -14,6 +14,10 @@ import {
 import {ref} from "vue";
 import {useTtStore} from "@/stores/ttStore";
 
+const {issue} = defineProps<{
+  issue?: string | string[]
+}>()
+
 const tt = useTtStore()
 
 const comment = ref<string>("");
@@ -21,28 +25,56 @@ const commentPrivate = ref(true);
 
 const cancel = () => modalController.dismiss(null, 'cancel');
 const confirm = () => {
-  tt.addComment(comment.value, commentPrivate.value)
-      .then(() =>
-          modalController.dismiss(null, 'confirm')
-      )
-      .catch(error => {
-        if (error.message === 'Failed to fetch')
-          alertController.create({
-            header: 'Нет сети',
-            message: 'Комментарий будет загружен при подключении к сети',
-            buttons: ['Ok'],
-          })
-              .then((alert) => alert.present())
-              .then(() => modalController.dismiss(null, 'confirm'))
-        else {
-          alertController.create({
-            header: 'Что то пошло не так',
-            message: error.message,
-            buttons: ['Ok'],
-          })
-              .then((alert) => alert.present())
-        }
-      })
+
+  if (Array.isArray(issue))
+    Promise.all(issue.map(id =>
+        tt.addComment(comment.value, commentPrivate.value, id)
+    ))
+        .then(() =>
+            modalController.dismiss(null, 'confirm')
+        )
+        .catch(error => {
+          if (error.message === 'Failed to fetch')
+            alertController.create({
+              header: 'Нет сети',
+              message: 'Комментарии будет загружен при подключении к сети',
+              buttons: ['Ok'],
+            })
+                .then((alert) => alert.present())
+                .then(() => modalController.dismiss(null, 'confirm'))
+          else {
+            alertController.create({
+              header: 'Что то пошло не так',
+              message: error.message,
+              buttons: ['Ok'],
+            })
+                .then((alert) => alert.present())
+          }
+        })
+
+  else
+    tt.addComment(comment.value, commentPrivate.value, issue)
+        .then(() =>
+            modalController.dismiss(null, 'confirm')
+        )
+        .catch(error => {
+          if (error.message === 'Failed to fetch')
+            alertController.create({
+              header: 'Нет сети',
+              message: 'Комментарий будет загружен при подключении к сети',
+              buttons: ['Ok'],
+            })
+                .then((alert) => alert.present())
+                .then(() => modalController.dismiss(null, 'confirm'))
+          else {
+            alertController.create({
+              header: 'Что то пошло не так',
+              message: error.message,
+              buttons: ['Ok'],
+            })
+                .then((alert) => alert.present())
+          }
+        })
 }
 </script>
 

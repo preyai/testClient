@@ -48,11 +48,6 @@ const openModal = async (comment?: Comment, index?: number) => {
   const modal = await modalController.create(options);
 
   await modal.present();
-
-  const {role} = await modal.onWillDismiss();
-
-  if (role === 'confirm')
-    await tt.updateIssue();
 };
 
 </script>
