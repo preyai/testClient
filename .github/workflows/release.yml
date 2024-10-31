@@ -3,7 +3,7 @@ name: Create GitHub Release on version change
 on:
   push:
     branches:
-      - main  # или ваша основная ветка, где происходят изменения
+      - master
 
 jobs:
   create_release:
