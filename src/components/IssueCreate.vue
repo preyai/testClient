@@ -24,23 +24,22 @@ import {useRouter} from "vue-router";
 type Models = Record<string, any>;
 
 const tt = useTtStore()
-const u = useIssueInput()
+const inputs = useIssueInput()
 const router = useRouter()
 
 const project = ref(tt.project)
 const workflow = ref<string>()
 const catalog = ref<string>()
 
-const fields = ref()
+// const fields = ref()
 const models = ref<Models>({});
 
 const getComponentResult = computed(() => {
-  return Object.keys(fields.value).reduce<Record<string, {
+  return Object.keys(models.value).reduce<Record<string, {
     component: any;
     props: Record<string, any>;
   }>>((acc: any, key) => {
-    const field = fields.value[key];
-    acc[key] = u.getComponent(field, project.value);
+    acc[key] = inputs.getComponent(key, project.value);
     return acc;
   }, {});
 });
@@ -67,6 +66,8 @@ const openCatalogSelect = async (e: Event) => {
 }
 
 const confirm = () => {
+  console.log(models.value)
+  return;
   tt.createIssue({
     project: project.value?.acronym,
     workflow: workflow.value,
@@ -96,9 +97,9 @@ watch(catalog, () => {
     catalog: catalog.value,
   })
       .then(res => {
-        fields.value = res.template.fields as Record<number, string>;
-        Object.keys(fields.value).forEach(key => {
-          models.value[fields.value[key]] = ''; // Инициализируем пустой строкой или другим значением по умолчанию
+        const fields = res.template.fields
+        Object.keys(res.template.fields).forEach(key => {
+          models.value[fields[key]] = ''; // Инициализируем пустой строкой или другим значением по умолчанию
         });
       })
 })
@@ -158,13 +159,12 @@ watch(catalog, () => {
     </IonInput>
 
     <component
-        v-for="(field,key) in fields"
+        v-for="(model,key) in models"
         :key="key"
         :is="getComponentResult[key].component"
         v-bind="getComponentResult[key].props"
-        v-model="models[field]"
-    >
-    </component>
+        v-model="models[key]"
+    />
 
   </IonContent>
 </template>

@@ -11,10 +11,13 @@ import {
   IonToolbar,
   modalController
 } from "@ionic/vue";
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import api from "@/api";
 import {useTtStore} from "@/stores/ttStore";
 import IssueInput from "@/components/IssueInput.vue";
+import useIssueInput from "@/hooks/useIssueInput";
+
+type Models = Record<string, any>;
 
 const {name, _fields, issue} = defineProps<{
   name: string,
@@ -23,8 +26,19 @@ const {name, _fields, issue} = defineProps<{
 }>()
 
 const tt = useTtStore()
+const inputs = useIssueInput()
 
-const fields = ref<Record<string, any>>({});
+const models = ref<Models>({});
+
+const getComponentResult = computed(() => {
+  return Object.keys(models.value).reduce<Record<string, {
+    component: any;
+    props: Record<string, any>;
+  }>>((acc: any, key) => {
+    acc[key] = inputs.getComponent(key, tt.project);
+    return acc;
+  }, {});
+});
 
 const initFields = (labels: string[]) => {
   // Ищем индекс поля с ключом 'comment'
@@ -36,7 +50,7 @@ const initFields = (labels: string[]) => {
   }
 
   // Преобразуем массив обратно в объект и сохраняем его в fields.value
-  fields.value = Object.fromEntries(
+  models.value = Object.fromEntries(
       labels.map((value) => [value, value === 'commentPrivate' ? true : '']))
 }
 
@@ -45,13 +59,13 @@ const cancel = () => modalController.dismiss(null, 'cancel');
 const confirm = () => {
   if (Array.isArray(issue))
     for (const id of issue)
-      tt.doAction(name, fields.value, id)
+      tt.doAction(name, models.value, id)
           .then(() => modalController.dismiss(null, 'confirm'))
   else if (issue)
-    tt.doAction(name, fields.value, issue)
+    tt.doAction(name, models.value, issue)
         .then(() => modalController.dismiss(null, 'confirm'))
   else
-    tt.doAction(name, fields.value)
+    tt.doAction(name, models.value)
         .then(() => modalController.dismiss(null, 'confirm'))
 }
 
@@ -99,9 +113,13 @@ onMounted(
       </IonButtons>
     </IonToolbar>
   </IonHeader>
-  <IonContent v-if="fields" class="ion-padding">
-    <IonItem v-for="key in Object.keys(fields)" :key="key">
-      <IssueInput :field="key" :value="fields[key]" @input="value => fields[key] = value"/>
+  <IonContent v-if="models" class="ion-padding">
+    <IonItem v-for="(field,key) in models" :key="key">
+      <component
+          :is="getComponentResult[key].component"
+          v-bind="getComponentResult[key].props"
+          v-model="models[field]"
+      />
     </IonItem>
   </IonContent>
 </template>

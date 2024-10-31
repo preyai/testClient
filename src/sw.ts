@@ -1,7 +1,7 @@
 import {precacheAndRoute} from 'workbox-precaching'
 import {registerRoute} from 'workbox-routing';
 import {NetworkFirst, NetworkOnly} from 'workbox-strategies';
-import {BackgroundSyncPlugin, Queue,} from 'workbox-background-sync';
+import {BackgroundSyncPlugin,} from 'workbox-background-sync';
 
 declare let self: ServiceWorkerGlobalScope
 precacheAndRoute(self.__WB_MANIFEST)

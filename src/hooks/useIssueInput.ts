@@ -1,12 +1,10 @@
-import {CustomField, Project} from "@/types/tt";
-import IssueInputText from "@/components/IssueInputText.vue";
+import {Project} from "@/types/tt";
 import {useTtStore} from "@/stores/ttStore";
-import IssueInputSelect from "@/components/IssueIonSelect.vue";
-import {h, onMounted, ref} from "vue";
-import api from "@/api";
-import {IonInput, IonSelect, IonSelectOption, IonTextarea} from "@ionic/vue";
-import {useI18n} from "vue-i18n";
 import IssueIonSelect from "@/components/IssueIonSelect.vue";
+import {onMounted, ref} from "vue";
+import api from "@/api";
+import {IonInput, IonTextarea} from "@ionic/vue";
+import {useI18n} from "vue-i18n";
 import IssueFileInput from "@/components/IssueFileInput.vue";
 
 const useIssueInput = () => {
