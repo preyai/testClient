@@ -1,0 +1,45 @@
+name: Create GitHub Release on version change
+
+on:
+  push:
+    branches:
+      - main  # или ваша основная ветка, где происходят изменения
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Setup Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      # Check if version has changed
+      - name: Get current version
+        id: get_version
+        run: echo "::set-output name=version::$(jq -r .version package.json)"
+
+      # Get the previous version from Git history
+      - name: Get previous version
+        id: get_previous_version
+        run: |
+          prev_version=$(git show HEAD^:package.json | jq -r .version)
+          echo "::set-output name=prev_version::$prev_version"
+
+      # Compare versions and create a release if the version has changed
+      - name: Create GitHub Release if version changed
+        if: steps.get_version.outputs.version != steps.get_previous_version.outputs.prev_version
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          name: Release v${{ steps.get_version.outputs.version }}
+          body: |
+            Автоматический релиз версии v${{ steps.get_version.outputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
