@@ -1,19 +1,17 @@
 <script setup lang="ts">
+import { useAuthStore } from "@/stores/authStore";
 import {
   IonButton,
+  IonCheckbox,
   IonContent,
   IonHeader,
   IonInput,
-  IonItem,
-  IonList,
   IonPage,
   IonTitle,
   IonToolbar,
-  useIonRouter,
-  IonCheckbox
+  useIonRouter
 } from '@ionic/vue';
-import {ref, watch} from "vue";
-import {useAuthStore} from "@/stores/authStore";
+import { ref, watch } from "vue";
 
 const authStore = useAuthStore()
 const {push} = useIonRouter()
