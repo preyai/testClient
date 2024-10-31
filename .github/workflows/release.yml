@@ -20,10 +20,12 @@ jobs:
         with:
           node-version: '20'
 
-      # Check if version has changed
+      # Get current version
       - name: Get current version
         id: get_version
-        run: echo "version=$(jq -r .version package.json)" >> $GITHUB_ENV
+        run: |
+          version=$(jq -r .version package.json)
+          echo "version=$version" >> $GITHUB_OUTPUT
 
       # Get the previous version from Git history
       - name: Get previous version
@@ -34,7 +36,7 @@ jobs:
           else
             prev_version=""
           fi
-          echo "prev_version=$prev_version" >> $GITHUB_ENV
+          echo "prev_version=$prev_version" >> $GITHUB_OUTPUT
 
       # Compare versions and create a release if the version has changed
       - name: Create GitHub Release if version changed
